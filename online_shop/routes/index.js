@@ -3,7 +3,9 @@ import ShopController from '../controllers/shop';
 
 const router = express.Router();
 
-router.get('/api/updateItemById', ShopController.UpdateItemById);
+router.post('/api/addItem', ShopController.AddItem);
+router.post('/api/incrementItemByTitle', ShopController.IncrementItemInventoryByTitle)
+router.post('/api/incrementItemById', ShopController.IncrementItemInventoryById)
 //router.post('/api/addItem', ShopController.addItem);
 /*router.get('/api/todos', ShopController.getAllTodos);
 router.get('/api/todos/:id', ShopController.getTodo);
