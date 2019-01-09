@@ -1,7 +1,11 @@
 # shopify_challenge
 Shopify Web Api Challenge
 
-Going to assume that the title of a product is an unique key for a product. 
+I was not sure whether the title of a product is supposed to be a unique key for a product. 
+I will assume that the title of a product is not a unique key for a product. 
+Title and price as a composite key will uniquely define a product. 
+So if you try to push a product with a same title with a different price, it will still be possible. 
+
 
 To-do List:
 1) Flesh out API
