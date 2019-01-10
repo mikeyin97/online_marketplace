@@ -77,7 +77,6 @@ class CartController {
               });
             } else {
               var item = body.response.items[0];
-              console.log(item);
               cart.push({id: req.body.id, title: item.title, price: item.price, count: amountToAdd});
               return res.status(200).send({
                 success: 'true',
@@ -131,14 +130,14 @@ class CartController {
       cartObj.count = 0;
       return res.status(200).send({
         success: 'false',
-        message: 'The cart cannot have an item with less than 0 count. No changes have been made',
+        message: 'The cart cannot have an item with less than 0 count. The count has been set to 0',
         current_cart: cart,
       });
     } else{
       cartObj.count = cartObj.count - amount;
       return res.status(200).send({
         success: 'true',
-        message: 'Your cart has been updated. Please note the cart cannot have an item with less than 0 count.',
+        message: 'Your cart has been updated.',
         current_cart: cart,
       });
     }
@@ -211,4 +210,4 @@ class CartController {
 }
 
 const cartController = new CartController();
-export default cartController;
+module.exports = cartController;

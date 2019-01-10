@@ -36,7 +36,7 @@ the Express framework for node.js, leveraging mongoDB as my database and Mocha/C
 ## Database Schema
 I use mongoDB as my noSQL database for storing values in the shop. It runs on localhost, port 27017. 
 
-The data is hosted in the `shop` collection of the `local` database. Data entries have the following schema:
+The 'real' data is hosted in the `shop` collection of the `local` database. Testing data uses the `shopTest` collection of the `local` database. Data entries have the following schema:
 
 ```
 {   

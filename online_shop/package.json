@@ -4,8 +4,8 @@
   "description": "A mockup of an online marketplace API.",
   "main": "app.js",
   "scripts": {
-    "test": "mocha --timeout 10000",
-    "start": "node_modules/.bin/nodemon app.js --exec babel-node --",
+    "test": "export NODE_ENV=test &&  node ./node_modules/mocha/bin/mocha",
+    "start": "export NODE_ENV=dev && node_modules/.bin/nodemon app.js --exec babel-node --",
     "lint": "eslint ."
   },
   "author": "Michael Yin",

@@ -1,7 +1,6 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import router from './routes/index.js';
-
+let express = require('express');
+let router = require('./routes/index.js');
+let bodyParser = require('body-parser');
 
 const app = express();
 
@@ -17,4 +16,4 @@ app.listen(PORT, () => {
   console.log(`server running on port ${PORT}`);
 });
 
-
+module.exports = app;

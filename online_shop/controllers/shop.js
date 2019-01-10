@@ -1,8 +1,13 @@
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
+var collectionName = 'shop';
+
+if (process.env.NODE_ENV === 'test'){
+  collectionName = 'shopTest'
+};
 
 var conn= MongoClient.connect('mongodb://localhost:27017/', { useNewUrlParser: true }).then(client => 
-  client.db('local').collection('shop')
+  client.db('local').collection(collectionName)
 );
 
 class ShopController {
@@ -574,4 +579,4 @@ class ShopController {
 }
 
 const shopController = new ShopController();
-export default shopController;
+module.exports = shopController;

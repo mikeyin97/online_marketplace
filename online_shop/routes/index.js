@@ -1,6 +1,6 @@
-import express from 'express';
-import ShopController from '../controllers/shop';
-import CartController from '../controllers/cart';
+let express = require('express');
+let ShopController = require('../controllers/shop');
+let CartController = require('../controllers/cart');
 
 const router = express.Router();
 
@@ -21,4 +21,4 @@ router.post('/api/addToCartById', CartController.AddToCartById);
 router.post('/api/removeFromCartById', CartController.RemoveFromCartById);
 router.post('/api/completeCartPurchase', CartController.CompleteCartPurchase);
 
-export default router;
+module.exports = router;
