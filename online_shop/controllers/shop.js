@@ -1,7 +1,9 @@
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 
-var conn = MongoClient.connect('mongodb://localhost:27017/', { useNewUrlParser: true });
+var conn= MongoClient.connect('mongodb://localhost:27017/', { useNewUrlParser: true }).then(client => 
+  client.db('local').collection('shop')
+);
 
 class ShopController {
 
@@ -52,7 +54,7 @@ class ShopController {
       };
     }
 
-    conn.then(client=> client.db('local').collection('shop').insertOne(newItem, (function(err, docs) {
+    conn.then(client=> client.insertOne(newItem, (function(err, docs) {
       if(err) {
         console.error(err);
         return res.status(400).send({
@@ -95,7 +97,7 @@ class ShopController {
     if (req.body.increment){
       increment = parseInt(req.body.increment);
     }
-    conn.then(client=> client.db('local').collection('shop').findOneAndUpdate(
+    conn.then(client=> client.findOneAndUpdate(
       {_id: id},
       {
         $inc: {inventory: increment},
@@ -141,7 +143,7 @@ class ShopController {
     if (req.body.increment){
       increment = parseInt(req.body.increment);
     }
-    conn.then(client=> client.db('local').collection('shop').findOneAndUpdate(
+    conn.then(client=> client.findOneAndUpdate(
       {title: req.body.title, price: parseFloat(req.body.price) },
       {
         $inc: {inventory: increment},
@@ -193,7 +195,7 @@ class ShopController {
         message: 'Increment must be non-negative',
       });
     }
-    conn.then(client=> client.db('local').collection('shop').findOne(
+    conn.then(client=> client.findOne(
       {title: req.body.title, price: parseFloat(req.body.price)},
       function(err, item){
         if(err) {
@@ -209,7 +211,7 @@ class ShopController {
               price: parseFloat(req.body.price),
               inventory: increment,
             };
-            conn.then(client=> client.db('local').collection('shop').insertOne(newItem, (function(err, docs) {
+            conn.then(client=> client.insertOne(newItem, (function(err, docs) {
               if(err) {
                 console.error(err);
                 return res.status(400).send({
@@ -225,7 +227,7 @@ class ShopController {
             })));
           } else {
             // update the inventory of the existing item by 1
-            conn.then(client=> client.db('local').collection('shop').updateOne(
+            conn.then(client=> client.updateOne(
               {title: req.body.title, price: parseFloat(req.body.price) },
               {
                 $inc: {inventory: increment},
@@ -272,7 +274,7 @@ class ShopController {
       });
     }
 
-    conn.then(client=> client.db('local').collection('shop').deleteOne(
+    conn.then(client=> client.deleteOne(
       {_id: ObjectId(id)},
       function(err, item){
         if(err) {
@@ -311,7 +313,7 @@ class ShopController {
       });
     }
 
-    conn.then(client=> client.db('local').collection('shop').deleteOne(
+    conn.then(client=> client.deleteOne(
       {title: req.body.title, price: parseFloat(req.body.price)},
       function(err, item){
         if(err) {
@@ -361,7 +363,7 @@ class ShopController {
     if (req.body.decrement){
       decrement = parseInt(req.body.decrement)*-1;
     }
-    conn.then(client=> client.db('local').collection('shop').findOneAndUpdate(
+    conn.then(client=> client.findOneAndUpdate(
       {_id: ObjectId(id), inventory: {$gte:decrement*-1}}, //the inventory must be greater than the decrement amount
       {
         $inc: {inventory: decrement},
@@ -407,7 +409,7 @@ class ShopController {
       decrement = parseInt(req.body.decrement)*-1;
     }
 
-    conn.then(client=> client.db('local').collection('shop').findOneAndUpdate(
+    conn.then(client=> client.findOneAndUpdate(
       {title: req.body.title, price: parseFloat(req.body.price), inventory: {$gte:1}},
       {
         $inc: {inventory: decrement},
@@ -485,7 +487,7 @@ class ShopController {
       query.price = { $lte: upperprice };
     }
 
-    conn.then(client=> client.db('local').collection('shop').find(query).toArray(function(err, docs) {
+    conn.then(client=> client.find(query).toArray(function(err, docs) {
       if(err) { console.error(err); }
       var response = {};
       response.items = docs;
@@ -541,7 +543,7 @@ class ShopController {
     }
 
     var queryId = ObjectId(req.body.id);
-    conn.then(client=> client.db('local').collection('shop').findOne(
+    conn.then(client=> client.findOne(
       {_id: ObjectId(queryId)},
       function(err, item){
         if(err) {

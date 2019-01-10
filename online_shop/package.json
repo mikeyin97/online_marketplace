@@ -4,7 +4,7 @@
   "description": "A mockup of an online marketplace API.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --timeout 10000",
     "start": "node_modules/.bin/nodemon app.js --exec babel-node --",
     "lint": "eslint ."
   },
@@ -19,7 +19,10 @@
     "request": "^2.88.0"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
     "eslint": "^5.12.0",
+    "mocha": "^5.2.0",
     "nodemon": "^1.18.9"
   }
 }

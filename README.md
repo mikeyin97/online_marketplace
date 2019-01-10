@@ -237,15 +237,8 @@ banana that costs $2.00 and a banana that costs $3.00 as seperate entries in the
 
 <a name="todos"></a>
 ## To-do List
-1) Flesh out API - Done
-2) Create a shopping cart using the API - Done
-3) Create an API for the shopping cart? - Done
-3b) Refactor Code - Done
-4) Unit Tests (in mocha + chai)
-5) Documentation (in code as well as in the README) - Done
-
-Extra
-5) GraphQL
-6) Adding security (passport)
+1) Unit Tests (in mocha + chai)
+2) GraphQL
+3) Adding security (passport)
 
 
