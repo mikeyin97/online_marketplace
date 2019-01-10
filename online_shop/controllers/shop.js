@@ -25,10 +25,32 @@ class ShopController {
       });
     }
 
-    const newItem = { title: req.body.title,
-      price: parseFloat(req.body.price),
-      inventory: parseInt(req.body.inventory),
-    };
+    // if id is passed in, set it to the id variable
+    var id = null;
+    if (req.body.id) {
+      try {
+        id = ObjectId(req.body.id);
+      } catch(err) {
+        return res.status(400).send({
+          success: 'false',
+          message: 'Not a valid id',
+        });
+      }
+    }
+
+    var newItem;
+    if (id){
+      newItem = { _id: id,
+        title: req.body.title,
+        price: parseFloat(req.body.price),
+        inventory: parseInt(req.body.inventory),
+      };
+    } else {
+      newItem = { title: req.body.title,
+        price: parseFloat(req.body.price),
+        inventory: parseInt(req.body.inventory),
+      };
+    }
 
     conn.then(client=> client.db('local').collection('shop').insertOne(newItem, (function(err, docs) {
       if(err) {
@@ -198,7 +220,6 @@ class ShopController {
                 return res.status(201).send({
                   success: 'true',
                   message: 'Item created successfully',
-                  item: newItem,
                 });
               }
             })));

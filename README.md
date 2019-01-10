@@ -57,11 +57,12 @@ banana that costs $2.00 and a banana that costs $3.00 as seperate entries in the
 ## Endpoints
 
 #### POST /api/addItem
-- **Description**: Add an item to the database.
+- **Description**: Add an item to the database. If id is not specified, mongo will make a default ObjectID. Otherwise, id must be a string of 24 hex characters (so it can be converted to ObjectID).
 - **Body**:
     - **title**: Title of the product *(required)*
     - **price**: Price of the product *(required)*
     - **inventory**: Inventory of the product *(required)*
+    - **id**: ID of the product *(default: ObjectId())*
 - **Expected Response**:
     - **status**: 201
     - **reponse body**:
@@ -69,7 +70,7 @@ banana that costs $2.00 and a banana that costs $3.00 as seperate entries in the
         - **message**: item created successfully
         - **item**: new item
 - **Errors by Status**:
-    - **400**: Missing parameters
+    - **400**: Missing parameters, ID not valid, trying to insert a duplicate ID
 
 #### POST /api/incrementItemById
 - **Description**: Find an item by passed ID then update its inventory by an incremental value
