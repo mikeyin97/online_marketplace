@@ -4,7 +4,7 @@ the Express framework for node.js, leveraging mongoDB as my database and Mocha/C
 
 ## Setup
 1) Clone the repository.
-2) Install mongoDB
+2) Install [mongoDB](https://docs.mongodb.com/manual/installation/)
 3) Navigate into online_shop folder with `cd online_shop`.
 4) Install dependencies with `npm install`. A list of dependencies can be found in package.json
 5) Start the application with `npm run start`. The api runs on localhost, port 9999.
@@ -16,7 +16,8 @@ the Express framework for node.js, leveraging mongoDB as my database and Mocha/C
 The data is hosted in the `shop` collection of the `local` database. Data entries have the following schema:
 
 ```
-{   _id:    ObjectId,
+{   
+    _id:    ObjectId,
     title:  String,
     price   Number,
     inventory: Number
@@ -37,14 +38,27 @@ banana that costs $2.00 and a banana that costs $3.00 as seperate entries in the
     - **title**: Title of the product *(required)*
     - **price**: Price of the product *(required)*
     - **inventory**: Inventory of the product *(required)*
-- **Expected Response: 201**:
-    - **success**: true
-    - **message**: item created successfully
-    - **item**: new item
+- **Expected Response**:
+    - **status**: 201
+    - **reponse body**:
+        - **success**: true
+        - **message**: item created successfully
+        - **item**: new item
 - **Errors by Status**:
     - **400**: Missing parameters
 
 #### POST /api/incrementItemById
+- **Description**:Find an item by passed ID then update its inventory by an incremental value
+- **Body**:
+    - **id**: ID of the product *(required)*
+    - **increment**: How much to increment the product's inventory *(default: 1)*
+- **Expected Response**:
+    - **status**: 201
+    - **reponse body**:
+        - **success**: true
+        - **message**: Item inventory incremented successfully
+- **Errors by Status**:
+    - **400**: Missing parameters, ID not found, ID not valid
 
 #### POST /api/incrementItemByTitleAndPrice
 

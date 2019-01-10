@@ -5,16 +5,6 @@ var conn = MongoClient.connect('mongodb://localhost:27017/', { useNewUrlParser: 
 
 class ShopController {
 
-  /*
-  POST: Add an item to the mongo database. Used to build the testing database.
-  Not used regularly.
-
-  BODY:
-  - title (required): title of product
-  - price (required): price of product
-  - inventory (required): inventory of product
-  */
-
   AddItem(req, res){
 
     // checking the validity of the input
@@ -45,25 +35,17 @@ class ShopController {
         console.error(err);
         return res.status(400).send({
           success: 'false',
-          message: 'an error occurred',
+          message: 'An error occurred',
         });
       } else {
         return res.status(201).send({
           success: 'true',
-          message: 'item created successfully',
+          message: 'Item created successfully',
           item: newItem,
         });
       }
     })));
   }
-
-  /*
-  POST: Find an item by passed ID then update the inventory by 1
-
-  BODY:
-  - id (required): id of product
-  - increment : how much to increase inventory by (default 1)
-  */
 
   IncrementItemInventoryById(req, res){
 
