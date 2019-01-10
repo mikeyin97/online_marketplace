@@ -2,6 +2,10 @@
 Hello! My name is Michael and this is my backend mockup of a online marketplace API. This app was built using
 the Express framework for node.js, leveraging mongoDB as my database and Mocha/Chai for my testing. 
 
+## Table of Contents
+1. [ Setup ](#setup)
+
+<a name="setup"></a>
 ## Setup
 1) Clone the repository.
 2) Install [mongoDB](https://docs.mongodb.com/manual/installation/)
@@ -79,6 +83,12 @@ banana that costs $2.00 and a banana that costs $3.00 as seperate entries in the
 ####
 
 
+## How-Tos
+- Make a Purchase
+
+- Query for All Products
+
+- Query for Available Products
 
 ## To-do List
 1) Flesh out API - Done
