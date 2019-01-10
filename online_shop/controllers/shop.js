@@ -16,6 +16,7 @@ class ShopController {
   - price (required): price of product
   - inventory (required): inventory of product
   */
+
   AddItem(req, res){
     if (!req.body.title) {
       return res.status(400).send({
@@ -60,6 +61,7 @@ class ShopController {
   BODY:
   - id (required): id of product
   */
+
   IncrementItemInventoryById(req, res){
     if (!req.body.id) {
       return res.status(400).send({
@@ -110,6 +112,7 @@ class ShopController {
   - title (required): title of product
   - price (required): price of product
   */
+
   IncrementItemInventoryByTitleAndPrice(req, res){
     if (!req.body.title) {
       return res.status(400).send({
@@ -159,6 +162,7 @@ class ShopController {
 
   Notes: refactor this later
   */
+
   UpsertItemByTitleAndPrice(req, res){
     if (!req.body.title) {
       return res.status(400).send({
@@ -234,6 +238,7 @@ class ShopController {
   BODY:
   - id (required): id of product
   */
+
   DeleteItemById(req, res){
     if (!req.body.id) {
       return res.status(400).send({
@@ -281,6 +286,7 @@ class ShopController {
   - title (required): title of product
   - price (required): price of product
   */
+
   DeleteItemByTitleAndPrice(req,res){
     if (!req.body.title) {
       return res.status(400).send({
@@ -323,6 +329,7 @@ class ShopController {
   BODY:
   - id (required): id of product
   */
+
   DecrementItemInventoryById(req,res){
     if (!req.body.id) {
       return res.status(400).send({
@@ -345,7 +352,7 @@ class ShopController {
               message: 'an error occurred',
             });
           } else if (!item.value){
-            return res.status(400).send({
+            return res.status(409).send({
               success: 'false',
               message: 'item was not found / had no inventory',
             });
@@ -375,6 +382,7 @@ class ShopController {
   - title (required): title of product
   - price (required): price of product
   */
+
   DecrementItemInventoryByTitleAndPrice(req,res){
     if (!req.body.title) {
       return res.status(400).send({
@@ -400,7 +408,7 @@ class ShopController {
             message: 'an error occurred',
           });
         } else if (!item.value){
-          return res.status(400).send({
+          return res.status(409).send({
             success: 'false',
             message: 'item was not found / had no inventory',
           });
@@ -431,6 +439,7 @@ class ShopController {
   }
   // Query Params: ID, Title, Available, lowerprice, upperprice, limit
   */
+
   GetItems(req, res){
     var id = null;// = req.query.id;
     var title = null; //= req.query.title;
