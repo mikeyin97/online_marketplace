@@ -12,8 +12,8 @@ To-do List:
 1) Flesh out API - Done
 2) Create a shopping cart using the API - Done
 3) Create an API for the shopping cart? - Done
-3b) Refactor Code
-4) Unit Tests (in jest?)
+3b) Refactor Code (make helper functions for checking)
+4) Unit Tests (in mocha + chai)
 5) Documentation (in code as well as in the README)
 
 Extra
