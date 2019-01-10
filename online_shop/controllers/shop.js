@@ -450,14 +450,12 @@ class ShopController {
   - available: if inventory greater than 0 (default: false)
   - lowerprice: lower bound on price 
   - upperprice: upper bound on price
-  - limit: limit on how many are returned
 
   OUTPUT:
   {
     Items : Array of Item Objects
     Count : Int (# of results)
   }
-  // Query Params: ID, Title, Available, lowerprice, upperprice, limit
   */
 
   GetItems(req, res){
@@ -466,7 +464,6 @@ class ShopController {
     var available = false; //= req.query.available;
     var lowerprice = null; //= req.query.lowerprice;
     var upperprice = null;// = req.query.upperprice;
-    var limit = null; //= req.query.limit;
     try {
       if (req.query.id) {
         id = ObjectId(req.query.id);
@@ -489,12 +486,6 @@ class ShopController {
           throw new Error("Upperprice is not a number");
         }
       }
-      if (req.query.limit) {
-        limit = parseInt(req.query.limit);
-        if (isNaN(limit)){
-          throw new Error("Limit is not a number");
-        }
-      }
     } catch(err) {
       console.log(err);
       return res.status(400).send({
@@ -506,9 +497,8 @@ class ShopController {
     if (id) { query._id = id; }
     if (title) { query.title = title; }
     if (available) { query.inventory = { $gt: 0 }; }
-    if (lowerprice) { query.lowerprice = lowerprice; }
-    if (upperprice) { query.upperprice = upperprice; }
-    if (limit) { query.limit = limit; }
+    if (lowerprice) { query.price = { $gte: lowerprice }; }
+    if (upperprice) { query.price = { $lte: upperprice }; }
     console.log(query);
     conn.then(client=> client.db('local').collection('shop').find(query).toArray(function(err, docs) {
       if(err) { console.error(err) }
@@ -522,7 +512,7 @@ class ShopController {
     }))
 
 
-    console.log(id, title, available, lowerprice, upperprice, limit);
+    console.log(id, title, available, lowerprice, upperprice);
     
   }
 
@@ -576,6 +566,7 @@ class ShopController {
       });
     }
   }
+  
 }
 
 const shopController = new ShopController();

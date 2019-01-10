@@ -10,8 +10,9 @@ The primary key of the collection a seperate id.
 
 To-do List:
 1) Flesh out API - Done
-2) Create a shopping cart using the API
-3) Create an API for the shopping cart?
+2) Create a shopping cart using the API - Done
+3) Create an API for the shopping cart? - Done
+3b) Refactor Code
 4) Unit Tests (in jest?)
 5) Documentation (in code as well as in the README)
 

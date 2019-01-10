@@ -19,5 +19,6 @@ router.get('/api/viewCart', CartController.ViewCart);
 router.post('/api/emptyCart', CartController.EmptyCart);
 router.post('/api/addToCartById', CartController.AddToCartById);
 router.post('/api/removeFromCartById', CartController.RemoveFromCartById);
+router.post('/api/completeCartPurchase', CartController.CompleteCartPurchase);
 
 export default router;
