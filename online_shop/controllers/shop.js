@@ -161,6 +161,16 @@ class ShopController {
       });
     }
 
+    var increment = 1;
+    if (req.body.increment){
+      increment = parseInt(req.body.increment);
+    }
+    if (increment < 0){
+      return res.status(400).send({
+        success: 'false',
+        message: 'Increment must be non-negative',
+      });
+    }
     conn.then(client=> client.db('local').collection('shop').findOne(
       {title: req.body.title, price: parseFloat(req.body.price)},
       function(err, item){
@@ -175,7 +185,7 @@ class ShopController {
             // if the item does not currently exist, create and insert one of it
             const newItem = { title: req.body.title,
               price: parseFloat(req.body.price),
-              inventory: 1,
+              inventory: increment,
             };
             conn.then(client=> client.db('local').collection('shop').insertOne(newItem, (function(err, docs) {
               if(err) {
@@ -197,7 +207,7 @@ class ShopController {
             conn.then(client=> client.db('local').collection('shop').updateOne(
               {title: req.body.title, price: parseFloat(req.body.price) },
               {
-                $inc: {inventory: 1},
+                $inc: {inventory: increment},
               },
               function(err, docs){
                 if(err) {
@@ -403,23 +413,6 @@ class ShopController {
     ));
   }
 
-  /*
-  GET: Get all items according to passed query parameters
-
-  QUERY PARAMETERS:
-  - id: id of product
-  - title: title of product
-  - available: if inventory greater than 0 (default: false)
-  - lowerprice: lower bound on price
-  - upperprice: upper bound on price
-
-  OUTPUT:
-  {
-    Items : Array of Item Objects
-    Count : Int (# of results)
-  }
-  */
-
   GetItems(req, res){
 
     // clean up input query parameters
@@ -482,7 +475,6 @@ class ShopController {
       });
     }));
   }
-
 
   AmountGtInventory(req, res){
 

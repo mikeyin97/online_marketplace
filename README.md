@@ -8,6 +8,16 @@ the Express framework for node.js, leveraging mongoDB as my database and Mocha/C
 3. [ Database Schema ](#database)
 4. [ Endpoints ](#endpoints)
 5. [ How-Tos ](#howtos)
+    - [ Make a Purchase ](#makepurchase)
+    - [ Query for All Products ](#queryall)
+    - [ Query for Available Products ](#queryavailable)
+    - [ Query for Products with a Price in a Range ](#queryrange)
+    - [ Query for a Specific Object by ID ](#queryid)
+    - [ Add to Your Shopping Cart ](#addcart)
+    - [ View Your Shopping Cart ](#viewcart)
+    - [ Remove From Your Shopping Cart ](#removecart)
+    - [ Delete Your Shopping Cart ](#deletecart)     
+    - [ Complete Your Purchase ](#completecart)
 6. [ To-do List ](#todos)
 
 <a name="setup"></a>
@@ -89,17 +99,18 @@ banana that costs $2.00 and a banana that costs $3.00 as seperate entries in the
     - **400**: Missing parameters, parameters not found in db, parameters not valid
 
 #### POST /api/upsertItemByTitleAndPrice
-- **Description**: Takes in a product's title and price. If an item does not exist with that title and price, make an entry with one inventory. Otherwise, update the inventory of that item by 1. 
+- **Description**: Takes in a product's title and price. If an item does not exist with that title and price, make an entry with an inventory equal to increment passed in. Otherwise, update the inventory of that item by that increment. Essentially it mimics adding increment # of the item to the shop, regardless of whether it exists or not. Increment MUST be positive.
 - **Body**:
     - **title**: Title of the product *(required)*
     - **price**: Price of the product *(required)*
+    - **increment**: Amount to update the inventory *(default:1)*
 - **Expected Response**:
     - **status**: 201
     - **reponse body**:
         - **success**: true
         - **message**: Item inventory incremented successfully / Item created successfully
 - **Errors by Status**:
-    - **400**: Missing parameters, parameters not found in db, parameters not valid
+    - **400**: Missing parameters, parameters not found in db, parameters not valid, negative increment
 
 #### POST /api/decrementItemById
 - **Description**: Find an item by passed ID then decrement its inventory by a given value. Note that this is equivalent to incrementItemById with the opposite number. **NOTE**: You cannot decrement into negative numbers. If you want to decrement more than the inventory has, an error will occur, and the item will not be decremented.  
@@ -193,11 +204,35 @@ banana that costs $2.00 and a banana that costs $3.00 as seperate entries in the
 <a name="howtos"></a>
 ## How-Tos
 
+<a name="makepurchase"></a>
 - Make a Purchase
 
+<a name="queryall"></a>
 - Query for All Products
 
+<a name="queryavailable"></a>
 - Query for Available Products
+
+<a name="queryrange"></a>
+- Query for Products with a Price in a Range
+
+<a name="queryid"></a>
+- Query for a Specific Object by ID
+
+<a name="addcart"></a>
+- Add to Your Shopping Cart
+
+<a name="viewcart"></a>
+- View Your Shopping Cart
+
+<a name="removecart"></a>
+- Remove From Your Shopping Cart
+
+<a name="deletecart"></a>
+- Delete From Your Shopping Cart
+
+<a name="completecart"></a>
+- Complete Your Purchase
 
 <a name="todos"></a>
 ## To-do List
