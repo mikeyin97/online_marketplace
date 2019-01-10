@@ -7,8 +7,8 @@ the Express framework for node.js, leveraging mongoDB as my database and Mocha/C
 2. [ Testing Notes ](#testing)
 3. [ Database Schema ](#database)
 4. [ Endpoints ](#endpoints)
-5. [ How-Tos ](#howto)
-6. [ To-do List ](#todo)
+5. [ How-Tos ](#howtos)
+6. [ To-do List ](#todos)
 
 <a name="setup"></a>
 ## Setup
@@ -179,10 +179,12 @@ banana that costs $2.00 and a banana that costs $3.00 as seperate entries in the
     - **reponse body**:
         - **success**: true
         - **response**: object that looks like:
-        ```{
+        ```
+        {
             items: [array of item objects]
             count: integer # of results
-        }```
+        }
+        ```
 - **Errors by Status**:
     - **400**: Missing parameters, invalid parameters
 
