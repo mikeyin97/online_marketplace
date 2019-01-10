@@ -6,12 +6,14 @@ var cart = [];
 class CartController {
 
   AddToCartById(req, res){
+
+    // check for the existence and validity of id
     var id = null;
     var amount = 1;
     if (!req.body.id) {
       return res.status(400).send({
         success: 'false',
-        message: 'an id is required',
+        message: 'An id is required',
       });
     }
     try {
@@ -22,14 +24,18 @@ class CartController {
       console.log(err);
       return res.status(400).send({
         success: 'false',
-        message: 'that is not a valid id',
+        message: 'Not a valid id',
       });
     }
+
+    // if amount is provided, set the amount variable to that value
     if (req.body.amount){
       amount = parseInt(req.body.amount);
     }
     var amountToAdd = amount;
     var amountToCompare = amount;
+
+    // the value we compare to inventory is the amount provided + the count in the cart
     var cartObj = cart.find(o => o.id === req.body.id);
     amountToCompare += cartObj ? cartObj.count : 0;
     request.post({
@@ -41,6 +47,7 @@ class CartController {
       json: true,
     }, function(error, response, body){
       if (body.response === true){
+        // if the amount provided + the count in the cart exceeds item inventory
         return res.status(400).send({
           success: 'false',
           message: 'Your cart amount would exceed current inventory. The item has not been added.',
@@ -48,6 +55,7 @@ class CartController {
         });
       } else {
         if (cartObj){
+          // if item already in cart, just add the amount provided to the count in the cart
           cartObj.count += amountToAdd;
           return res.status(200).send({
             success: 'true',
@@ -55,12 +63,13 @@ class CartController {
             current_cart: cart,
           });
         } else {
-          console.log('http://localhost:9999/api/getItems?id='+req.body.id);
+          // get the item by id (if it exists), and add that to the cart with count equalling the amount provided
           request.get({
             url:     'http://localhost:9999/api/getItems?id='+req.body.id,
           }, function(error, response, body){
             body = JSON.parse(body);
             if (body.response.count === 0){
+              // if item doesn't exist
               return res.status(400).send({
                 success: 'false',
                 message: 'Item with this ID does not exist',
@@ -76,7 +85,6 @@ class CartController {
                 current_cart: cart,
               });
             }
-
           });
         }
       }
@@ -84,12 +92,13 @@ class CartController {
   }
 
   RemoveFromCartById(req, res){
+    // check for validity and existence of id
     var id = null;
     var amount = 1;
     if (!req.body.id) {
       return res.status(400).send({
         success: 'false',
-        message: 'an id is required',
+        message: 'An id is required',
       });
     }
     try {
@@ -100,21 +109,25 @@ class CartController {
       console.log(err);
       return res.status(400).send({
         success: 'false',
-        message: 'that is not a valid id',
+        message: 'Not a valid id',
       });
     }
+
+    // if amount is provided, set the amount variable to that value
     if (req.body.amount){
       amount = parseInt(req.body.amount);
     }
+
     var cartObj = cart.find(o => o.id === req.body.id);
     if (!cartObj){
       return res.status(200).send({
         success: 'false',
-        message: 'This item does not exist.',
+        message: 'This item does not exist in your cart.',
         current_cart: cart,
       });
     }
     if (cartObj.count - amount < 0){
+      // if the amount to be removed from the cart exceeds the count of the item in the cart
       cartObj.count = 0;
       return res.status(200).send({
         success: 'false',
@@ -135,7 +148,7 @@ class CartController {
     cart = [];
     return res.status(200).send({
       success: 'true',
-      response: 'cart successfully emptied',
+      response: 'Cart successfully emptied',
       current_cart: cart,
     });
   }
@@ -146,19 +159,24 @@ class CartController {
     response.count = cart.length;
     return res.status(200).send({
       success: 'true',
-      response: response,
+      current_cart: response,
     });
   }
 
   CompleteCartPurchase(req, res){
+
+    // for each item in the cart, decrement the item in the shop by the corresponding count.
+    // keep a running sum for the total cost of the cart
     var cartTotal = 0;
     var oldcart = null;
+
     if (cart.length === 0){
+      // if your cart is empty
       oldcart = cart;
       cart = [];
       return res.status(200).send({
         success: 'true',
-        response: 'purchase completed (you should buy something next time!)',
+        response: 'Purchase completed (you should buy something next time!)',
         purchase: oldcart,
         current_cart: cart,
         cost: cartTotal,
@@ -179,7 +197,7 @@ class CartController {
         cart = [];
         return res.status(200).send({
           success: 'true',
-          response: 'purchase completed',
+          response: 'Purchase completed',
           purchase: oldcart,
           current_cart: cart,
           cost: cartTotal,
@@ -189,6 +207,7 @@ class CartController {
 
 
   }
+
 }
 
 const cartController = new CartController();

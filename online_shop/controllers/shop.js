@@ -21,17 +21,17 @@ class ShopController {
     if (!req.body.title) {
       return res.status(400).send({
         success: 'false',
-        message: 'a title is required',
+        message: 'A title is required',
       });
     } else if (!req.body.price) {
       return res.status(400).send({
         success: 'false',
-        message: 'a price is required',
+        message: 'A price is required',
       });
     } else if (!req.body.inventory) {
       return res.status(400).send({
         success: 'false',
-        message: 'an inventory is required',
+        message: 'An inventory is required',
       });
     }
 
@@ -66,11 +66,13 @@ class ShopController {
   */
 
   IncrementItemInventoryById(req, res){
+
+    // checking if the id is passed in and is valid
     var id = null;
     if (!req.body.id) {
       return res.status(400).send({
         success: 'false',
-        message: 'an id is required',
+        message: 'An id is required',
       });
     }
     try {
@@ -81,9 +83,10 @@ class ShopController {
       console.log(err);
       return res.status(400).send({
         success: 'false',
-        message: 'that is not a valid id',
+        message: 'Not a valid id',
       });
     }
+
     var increment = 1;
     if (req.body.increment){
       increment = parseInt(req.body.increment);
@@ -98,17 +101,17 @@ class ShopController {
           console.error(err);
           return res.status(400).send({
             success: 'false',
-            message: 'an error occurred',
+            message: 'An error occurred',
           });
         } else if (!item.value){
           return res.status(400).send({
             success: 'false',
-            message: 'item was not found',
+            message: 'Item was not found',
           });
         } else {
           return res.status(201).send({
             success: 'true',
-            message: 'item inventory incremented successfully',
+            message: 'Item inventory incremented successfully',
           });
         }
       }
@@ -125,17 +128,20 @@ class ShopController {
   */
 
   IncrementItemInventoryByTitleAndPrice(req, res){
+
+    // checking if title and price are both passed as body params
     if (!req.body.title) {
       return res.status(400).send({
         success: 'false',
-        message: 'a title is required',
+        message: 'A title is required',
       });
     } else if (!req.body.price) {
       return res.status(400).send({
         success: 'false',
-        message: 'a price is required',
+        message: 'A price is required',
       });
     }
+
     var increment = 1;
     if (req.body.increment){
       increment = parseInt(req.body.increment);
@@ -150,17 +156,17 @@ class ShopController {
           console.error(err);
           return res.status(400).send({
             success: 'false',
-            message: 'an error occurred',
+            message: 'An error occurred',
           });
         } else if (!item.value){
           return res.status(400).send({
             success: 'false',
-            message: 'item was not found',
+            message: 'Item was not found',
           });
         } else {
           return res.status(201).send({
             success: 'true',
-            message: 'item inventory incremented successfully',
+            message: 'Item inventory incremented successfully',
           });
         }
       }
@@ -179,17 +185,20 @@ class ShopController {
   */
 
   UpsertItemByTitleAndPrice(req, res){
+
+    // checking if both title and price are passed as body params
     if (!req.body.title) {
       return res.status(400).send({
         success: 'false',
-        message: 'a title is required',
+        message: 'A title is required',
       });
     } else if (!req.body.price) {
       return res.status(400).send({
         success: 'false',
-        message: 'a price is required',
+        message: 'A price is required',
       });
     }
+
     conn.then(client=> client.db('local').collection('shop').findOne(
       {title: req.body.title, price: parseFloat(req.body.price)},
       function(err, item){
@@ -197,30 +206,32 @@ class ShopController {
           console.error(err);
           return res.status(400).send({
             success: 'false',
-            message: 'an error occurred',
+            message: 'An error occurred',
           });
         } else {
           if (!item) {
+            // if the item does not currently exist, create and insert one of it
             const newItem = { title: req.body.title,
               price: parseFloat(req.body.price),
-              inventory: parseInt(1),
+              inventory: 1,
             };
             conn.then(client=> client.db('local').collection('shop').insertOne(newItem, (function(err, docs) {
               if(err) {
                 console.error(err);
                 return res.status(400).send({
                   success: 'false',
-                  message: 'an error occurred',
+                  message: 'An error occurred',
                 });
               } else {
                 return res.status(201).send({
                   success: 'true',
-                  message: 'item created successfully',
+                  message: 'Item created successfully',
                   item: newItem,
                 });
               }
             })));
           } else {
+            // update the inventory of the existing item by 1
             conn.then(client=> client.db('local').collection('shop').updateOne(
               {title: req.body.title, price: parseFloat(req.body.price) },
               {
@@ -231,12 +242,12 @@ class ShopController {
                   console.error(err);
                   return res.status(400).send({
                     success: 'false',
-                    message: 'an error occurred',
+                    message: 'An error occurred',
                   });
                 } else {
                   return res.status(201).send({
                     success: 'true',
-                    message: 'item inventory incremented successfully',
+                    message: 'Item inventory incremented successfully',
                   });
                 }
               }));
@@ -254,67 +265,29 @@ class ShopController {
   */
 
   DeleteItemById(req, res){
+
+    // checking if the id is passed in and is valid
+    var id = null;
     if (!req.body.id) {
       return res.status(400).send({
         success: 'false',
-        message: 'an id is required',
+        message: 'An id is required',
       });
     }
     try {
-      var queryId = ObjectId(req.body.id);
-      conn.then(client=> client.db('local').collection('shop').deleteOne(
-        {_id: ObjectId(queryId)},
-        function(err, item){
-          if(err) {
-            console.error(err);
-            return res.status(400).send({
-              success: 'false',
-              message: 'an error occurred',
-            });
-          } else if (item.deletedCount === 0){
-            return res.status(400).send({
-              success: 'false',
-              message: 'item was not found',
-            });
-          } else {
-            return res.status(200).send({
-              success: 'true',
-              message: 'item inventory deleted successfully',
-            });
-          }
-        }
-      ));
+      if (req.body.id) {
+        id = ObjectId(req.body.id);
+      }
     } catch(err) {
-      console.error(err);
+      console.log(err);
       return res.status(400).send({
         success: 'false',
-        message: 'not a valid ID',
+        message: 'Not a valid id',
       });
     }
-  }
 
-  /*
-  POST: Deletes an item with the corresponding id from the database.
-
-  BODY:
-  - title (required): title of product
-  - price (required): price of product
-  */
-
-  DeleteItemByTitleAndPrice(req, res){
-    if (!req.body.title) {
-      return res.status(400).send({
-        success: 'false',
-        message: 'a title is required',
-      });
-    } else if (!req.body.price) {
-      return res.status(400).send({
-        success: 'false',
-        message: 'a price is required',
-      });
-    }
     conn.then(client=> client.db('local').collection('shop').deleteOne(
-      {title: req.body.title, price: parseFloat(req.body.price)},
+      {_id: ObjectId(id)},
       function(err, item){
         if(err) {
           console.error(err);
@@ -338,89 +311,91 @@ class ShopController {
   }
 
   /*
-  POST: Find an item by passed ID then decrease the inventory by 1.
-  Equivalent to IncrementItemInventoryById with the negative number increment as decrement
-
-  BODY:
-  - id (required): id of product
-  - decrement: how much to decrease inventory by (default: 1)
-  */
-
-  DecrementItemInventoryById(req, res){
-    if (!req.body.id) {
-      return res.status(400).send({
-        success: 'false',
-        message: 'an id is required',
-      });
-    }
-    try {
-      var decrement = -1;
-      if (req.body.decrement){
-        decrement = parseInt(req.body.decrement)*-1;
-      }
-      var queryId = ObjectId(req.body.id);
-      conn.then(client=> client.db('local').collection('shop').findOneAndUpdate(
-        {_id: ObjectId(queryId), inventory: {$gte:1}},
-        {
-          $inc: {inventory: decrement},
-        },
-        function(err, item){
-          if(err) {
-            console.error(err);
-            return res.status(400).send({
-              success: 'false',
-              message: 'an error occurred',
-            });
-          } else if (!item.value){
-            return res.status(409).send({
-              success: 'false',
-              message: 'item was not found / had no inventory',
-            });
-          } else {
-            return res.status(201).send({
-              success: 'true',
-              message: 'item inventory decremented successfully',
-            });
-          }
-        }
-      ));
-    } catch(err) {
-      console.error(err);
-      return res.status(400).send({
-        success: 'false',
-        message: 'not a valid ID',
-      });
-    }
-
-
-  }
-
-  /*
-  POST: Find an item by passed title and price then decrease the inventory by 1
+  POST: Deletes an item with the corresponding id from the database.
 
   BODY:
   - title (required): title of product
   - price (required): price of product
   */
 
-  DecrementItemInventoryByTitleAndPrice(req, res){
+  DeleteItemByTitleAndPrice(req, res){
+
+    // check if both a title and price are passed in the body params
     if (!req.body.title) {
       return res.status(400).send({
         success: 'false',
-        message: 'a title is required',
+        message: 'A title is required',
       });
     } else if (!req.body.price) {
       return res.status(400).send({
         success: 'false',
-        message: 'a price is required',
+        message: 'A price is required',
       });
     }
+
+    conn.then(client=> client.db('local').collection('shop').deleteOne(
+      {title: req.body.title, price: parseFloat(req.body.price)},
+      function(err, item){
+        if(err) {
+          console.error(err);
+          return res.status(400).send({
+            success: 'false',
+            message: 'An error occurred',
+          });
+        } else if (item.deletedCount === 0){
+          return res.status(400).send({
+            success: 'false',
+            message: 'Item was not found',
+          });
+        } else {
+          return res.status(200).send({
+            success: 'true',
+            message: 'Item inventory deleted successfully',
+          });
+        }
+      }
+    ));
+  }
+
+  /*
+  POST: Find an item by passed ID then decrease the inventory by 1.
+  Equivalent to IncrementItemInventoryById with the negative number increment as decrement
+
+  BODY:
+  - id (required): id of product
+  - decrement: how much to decrease inventory by (default: 1)
+
+  Note: You cannot decrement into negative values
+  */
+
+  DecrementItemInventoryById(req, res){
+
+    // checking if the id is passed in and is valid
+    var id = null;
+    if (!req.body.id) {
+      return res.status(400).send({
+        success: 'false',
+        message: 'An id is required',
+      });
+    }
+    try {
+      if (req.body.id) {
+        id = ObjectId(req.body.id);
+      }
+    } catch(err) {
+      console.log(err);
+      return res.status(400).send({
+        success: 'false',
+        message: 'Not a valid id',
+      });
+    }
+
     var decrement = -1;
     if (req.body.decrement){
       decrement = parseInt(req.body.decrement)*-1;
     }
     conn.then(client=> client.db('local').collection('shop').findOneAndUpdate(
-      {title: req.body.title, price: parseFloat(req.body.price), inventory: {$gte:1}},
+      {_id: ObjectId(id), inventory: {$gte:decrement*-1}}, //the inventory must be greater than the decrement amount
       {
         $inc: {inventory: decrement},
       },
@@ -434,12 +409,66 @@ class ShopController {
         } else if (!item.value){
           return res.status(409).send({
             success: 'false',
-            message: 'item was not found / had no inventory',
+            message: 'item was not found / had insufficient inventory',
+          });
+        } else {
+          return res.status(201).send({
+            success: 'true',
+            message: 'item inventory decremented successfully',
+          });
+        }
+      }
+    ));
+  }
+
+  /*
+  POST: Find an item by passed title and price then decrease the inventory by 1
+
+  BODY:
+  - title (required): title of product
+  - price (required): price of product
+  */
+
+  DecrementItemInventoryByTitleAndPrice(req, res){
+
+    // check if both a title and price are passed in the body params
+    if (!req.body.title) {
+      return res.status(400).send({
+        success: 'false',
+        message: 'A title is required',
+      });
+    } else if (!req.body.price) {
+      return res.status(400).send({
+        success: 'false',
+        message: 'A price is required',
+      });
+    }
+    var decrement = -1;
+    if (req.body.decrement){
+      decrement = parseInt(req.body.decrement)*-1;
+    }
+
+    conn.then(client=> client.db('local').collection('shop').findOneAndUpdate(
+      {title: req.body.title, price: parseFloat(req.body.price), inventory: {$gte:1}},
+      {
+        $inc: {inventory: decrement},
+      },
+      function(err, item){
+        if(err) {
+          console.error(err);
+          return res.status(400).send({
+            success: 'false',
+            message: 'An error occurred',
+          });
+        } else if (!item.value){
+          return res.status(409).send({
+            success: 'false',
+            message: 'Item was not found / had no inventory',
           });
         } else {
           return res.status(200).send({
             success: 'true',
-            message: 'item inventory decremented successfully',
+            message: 'Item inventory decremented successfully',
           });
         }
       }
@@ -464,11 +493,13 @@ class ShopController {
   */
 
   GetItems(req, res){
-    var id = null;// = req.query.id;
-    var title = null; //= req.query.title;
-    var available = false; //= req.query.available;
-    var lowerprice = null; //= req.query.lowerprice;
-    var upperprice = null;// = req.query.upperprice;
+
+    // clean up input query parameters
+    var id = null;
+    var title = null;
+    var available = false;
+    var lowerprice = null;
+    var upperprice = null;
     try {
       if (req.query.id) {
         id = ObjectId(req.query.id);
@@ -495,16 +526,23 @@ class ShopController {
       console.log(err);
       return res.status(400).send({
         success: 'false',
-        message: 'invalid params',
+        message: 'Invalid parameters',
       });
     }
+
+    // build the mongo query
     var query = {};
     if (id) { query._id = id; }
     if (title) { query.title = title; }
     if (available) { query.inventory = { $gt: 0 }; }
-    if (lowerprice) { query.price = { $gte: lowerprice }; }
-    if (upperprice) { query.price = { $lte: upperprice }; }
-    console.log(query);
+    if (lowerprice & upperprice) {
+      query.price = { $gte: lowerprice, $lte: upperprice };
+    } else if (lowerprice) {
+      query.price = { $lte: lowerprice };
+    } else if (upperprice) {
+      query.price = { $lte: upperprice };
+    }
+
     conn.then(client=> client.db('local').collection('shop').find(query).toArray(function(err, docs) {
       if(err) { console.error(err); }
       var response = {};
@@ -515,61 +553,79 @@ class ShopController {
         response: response,
       });
     }));
-
-
-    console.log(id, title, available, lowerprice, upperprice);
-
   }
 
+
   AmountGtInventory(req, res){
+
+    // checking if the id and amount are passed in and are valid
+    var id = null;
+    var amount = null;
     if (!req.body.id) {
       return res.status(400).send({
         success: 'false',
-        message: 'an id is required',
+        message: 'An id is required',
       });
     }
     try {
-      var amount = null;
+      if (req.body.id) {
+        id = ObjectId(req.body.id);
+      }
+    } catch(err) {
+      console.log(err);
+      return res.status(400).send({
+        success: 'false',
+        message: 'Not a valid id',
+      });
+    }
+    if (!req.body.amount) {
+      return res.status(400).send({
+        success: 'false',
+        message: 'An amount is required',
+      });
+    }
+    try {
       if (req.body.amount) {
         amount = parseInt(req.body.amount);
       }
       if (isNaN(amount)){
         throw new Error("Amount is not a number");
       }
-      var queryId = ObjectId(req.body.id);
-      conn.then(client=> client.db('local').collection('shop').findOne(
-        {_id: ObjectId(queryId)},
-        function(err, item){
-          if(err) {
-            console.error(err);
-            return res.status(400).send({
-              success: 'false',
-              message: 'an error occurred',
-            });
-          } else if (!item){
-            return res.status(409).send({
-              success: 'false',
-              message: 'item was not found / had no inventory',
-            });
-          } else {
-            var response = false;
-            if (amount > item.inventory) {
-              response = true;
-            }
-            return res.status(201).send({
-              success: 'true',
-              response: response,
-            });
-          }
-        }
-      ));
     } catch(err) {
-      console.error(err);
+      console.log(err);
       return res.status(400).send({
         success: 'false',
-        message: 'not a valid ID or a valid amount',
+        message: 'Not a valid amount',
       });
     }
+
+    var queryId = ObjectId(req.body.id);
+    conn.then(client=> client.db('local').collection('shop').findOne(
+      {_id: ObjectId(queryId)},
+      function(err, item){
+        if(err) {
+          console.error(err);
+          return res.status(400).send({
+            success: 'false',
+            message: 'An error occurred',
+          });
+        } else if (!item){
+          return res.status(409).send({
+            success: 'false',
+            message: 'Item was not found',
+          });
+        } else {
+          var response = false;
+          if (amount > item.inventory) {
+            response = true;
+          }
+          return res.status(201).send({
+            success: 'true',
+            response: response,
+          });
+        }
+      }
+    ));
   }
 
 }
