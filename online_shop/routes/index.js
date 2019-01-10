@@ -12,8 +12,8 @@ router.post('/api/decrementItemById', ShopController.DecrementItemInventoryById)
 router.post('/api/decrementItemByTitleAndPrice', ShopController.DecrementItemInventoryByTitleAndPrice);
 router.post('/api/deleteItemById', ShopController.DeleteItemById);
 router.post('/api/deleteItemByTitleAndPrice', ShopController.DeleteItemByTitleAndPrice);
-router.get('/api/getItems', ShopController.GetItems);
 router.post('/api/amountGtInventory', ShopController.AmountGtInventory);
+router.get('/api/getItems', ShopController.GetItems);
 
 router.get('/api/viewCart', CartController.ViewCart);
 router.post('/api/emptyCart', CartController.EmptyCart);

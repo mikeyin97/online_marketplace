@@ -91,7 +91,7 @@ class ShopController {
             message: 'Item was not found',
           });
         } else {
-          return res.status(201).send({
+          return res.status(200).send({
             success: 'true',
             message: 'Item inventory incremented successfully',
           });
@@ -99,15 +99,6 @@ class ShopController {
       }
     ));
   }
-
-  /*
-  POST: Find an item by passed title and price then update the inventory by 1
-
-  BODY:
-  - title (required): title of product
-  - price (required): price of product
-  - increment : how much to increase inventory by (default 1)
-  */
 
   IncrementItemInventoryByTitleAndPrice(req, res){
 
@@ -146,7 +137,7 @@ class ShopController {
             message: 'Item was not found',
           });
         } else {
-          return res.status(201).send({
+          return res.status(200).send({
             success: 'true',
             message: 'Item inventory incremented successfully',
           });
@@ -154,17 +145,6 @@ class ShopController {
       }
     ));
   }
-
-  /*
-  POST: Takes in an item title. If an item does not exist with that title and price, create a new item,
-  otherwise update the inventory of that item by 1.
-
-  BODY:
-  - title (required): title of product
-  - price (required): price of product
-
-  Notes: refactor this later
-  */
 
   UpsertItemByTitleAndPrice(req, res){
 
@@ -239,13 +219,6 @@ class ShopController {
     ));
   }
 
-  /*
-  POST: Deletes an item with the corresponding id from the database.
-
-  BODY:
-  - id (required): id of product
-  */
-
   DeleteItemById(req, res){
 
     // checking if the id is passed in and is valid
@@ -285,20 +258,12 @@ class ShopController {
         } else {
           return res.status(200).send({
             success: 'true',
-            message: 'item inventory deleted successfully',
+            message: 'item deleted successfully',
           });
         }
       }
     ));
   }
-
-  /*
-  POST: Deletes an item with the corresponding id from the database.
-
-  BODY:
-  - title (required): title of product
-  - price (required): price of product
-  */
 
   DeleteItemByTitleAndPrice(req, res){
 
@@ -332,23 +297,12 @@ class ShopController {
         } else {
           return res.status(200).send({
             success: 'true',
-            message: 'Item inventory deleted successfully',
+            message: 'Item deleted successfully',
           });
         }
       }
     ));
   }
-
-  /*
-  POST: Find an item by passed ID then decrease the inventory by 1.
-  Equivalent to IncrementItemInventoryById with the negative number increment as decrement
-
-  BODY:
-  - id (required): id of product
-  - decrement: how much to decrease inventory by (default: 1)
-
-  Note: You cannot decrement into negative values
-  */
 
   DecrementItemInventoryById(req, res){
 
@@ -389,7 +343,7 @@ class ShopController {
             message: 'an error occurred',
           });
         } else if (!item.value){
-          return res.status(409).send({
+          return res.status(400).send({
             success: 'false',
             message: 'item was not found / had insufficient inventory',
           });
@@ -402,14 +356,6 @@ class ShopController {
       }
     ));
   }
-
-  /*
-  POST: Find an item by passed title and price then decrease the inventory by 1
-
-  BODY:
-  - title (required): title of product
-  - price (required): price of product
-  */
 
   DecrementItemInventoryByTitleAndPrice(req, res){
 
@@ -443,7 +389,7 @@ class ShopController {
             message: 'An error occurred',
           });
         } else if (!item.value){
-          return res.status(409).send({
+          return res.status(400).send({
             success: 'false',
             message: 'Item was not found / had no inventory',
           });
@@ -601,7 +547,7 @@ class ShopController {
           if (amount > item.inventory) {
             response = true;
           }
-          return res.status(201).send({
+          return res.status(200).send({
             success: 'true',
             response: response,
           });
