@@ -1,5 +1,6 @@
 import express from 'express';
 import ShopController from '../controllers/shop';
+import CartController from '../controllers/cart';
 
 const router = express.Router();
 
@@ -12,5 +13,11 @@ router.post('/api/decrementItemByTitleAndPrice', ShopController.DecrementItemInv
 router.post('/api/deleteItemById', ShopController.DeleteItemById);
 router.post('/api/deleteItemByTitleAndPrice', ShopController.DeleteItemByTitleAndPrice);
 router.get('/api/getItems', ShopController.GetItems);
+router.post('/api/amountGtInventory', ShopController.AmountGtInventory);
+
+router.get('/api/viewCart', CartController.ViewCart);
+router.post('/api/emptyCart', CartController.EmptyCart);
+router.post('/api/addToCartById', CartController.AddToCartById);
+router.post('/api/removeFromCartById', CartController.RemoveFromCartById);
 
 export default router;

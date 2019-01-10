@@ -60,6 +60,7 @@ class ShopController {
   
   BODY:
   - id (required): id of product
+  - increment : how much to increase inventory by (default 1)
   */
 
   IncrementItemInventoryById(req, res){
@@ -71,10 +72,14 @@ class ShopController {
     }
     try {
       var queryId = ObjectId(req.body.id);
+      var increment = 1;
+      if (req.body.increment){
+        increment = parseInt(req.body.increment);
+      }
       conn.then(client=> client.db('local').collection('shop').findOneAndUpdate(
         {_id: ObjectId(queryId)}, 
         {
-          $inc: {inventory: 1},
+          $inc: {inventory: increment},
         },
         function(err, item){ 
           if(err) {
@@ -111,6 +116,7 @@ class ShopController {
   BODY:
   - title (required): title of product
   - price (required): price of product
+  - increment : how much to increase inventory by (default 1)
   */
 
   IncrementItemInventoryByTitleAndPrice(req, res){
@@ -125,10 +131,14 @@ class ShopController {
         message: 'a price is required',
       });
     }
+    var increment = 1;
+    if (req.body.increment){
+      increment = parseInt(req.body.increment);
+    }
     conn.then(client=> client.db('local').collection('shop').findOneAndUpdate(
       {title: req.body.title, price: parseFloat(req.body.price) }, 
       {
-        $inc: {inventory: 1},
+        $inc: {inventory: increment},
       },
       function(err, item){ 
         if(err) {
@@ -178,7 +188,6 @@ class ShopController {
     conn.then(client=> client.db('local').collection('shop').findOne(
       {title: req.body.title, price: parseFloat(req.body.price)},
       function(err, item){
-        console.log(err);
         if(err) {
           console.error(err)
           return res.status(400).send({
@@ -324,10 +333,12 @@ class ShopController {
   }
 
   /* 
-  POST: Find an item by passed ID then decrease the inventory by 1
+  POST: Find an item by passed ID then decrease the inventory by 1. 
+  Equivalent to IncrementItemInventoryById with the negative number increment as decrement
   
   BODY:
   - id (required): id of product
+  - decrement: how much to decrease inventory by (default: 1)
   */
 
   DecrementItemInventoryById(req,res){
@@ -338,11 +349,15 @@ class ShopController {
       });
     }
     try {
+      var decrement = -1;
+      if (req.body.decrement){
+        decrement = parseInt(req.body.decrement)*-1;
+      }
       var queryId = ObjectId(req.body.id);
       conn.then(client=> client.db('local').collection('shop').findOneAndUpdate(
         {_id: ObjectId(queryId), inventory: {$gte:1}}, 
         {
-          $inc: {inventory: -1},
+          $inc: {inventory: decrement},
         },
         function(err, item){ 
           if(err) {
@@ -395,10 +410,14 @@ class ShopController {
         message: 'a price is required',
       });
     }
+    var decrement = -1;
+    if (req.body.decrement){
+      decrement = parseInt(req.body.decrement)*-1;
+    }
     conn.then(client=> client.db('local').collection('shop').findOneAndUpdate(
       {title: req.body.title, price: parseFloat(req.body.price), inventory: {$gte:1}}, 
       {
-        $inc: {inventory: -1},
+        $inc: {inventory: decrement},
       },
       function(err, item){ 
         if(err) {
@@ -422,7 +441,8 @@ class ShopController {
     ))
   }
 
-  /* GET: Get all items according to passed query parameters
+  /* 
+  GET: Get all items according to passed query parameters
 
   QUERY PARAMETERS:
   - id: id of product 
@@ -499,11 +519,62 @@ class ShopController {
         success: 'true',
         response: response,
       });
-  }))
+    }))
 
 
     console.log(id, title, available, lowerprice, upperprice, limit);
     
+  }
+
+  AmountGtInventory(req, res){
+    if (!req.body.id) {
+      return res.status(400).send({
+        success: 'false',
+        message: 'an id is required',
+      });
+    }
+    try {
+      var amount = null;
+      if (req.body.amount) {
+        amount = parseInt(req.body.amount);
+      }
+      if (isNaN(amount)){
+        throw new Error("Amount is not a number");
+      }
+      var queryId = ObjectId(req.body.id);
+      conn.then(client=> client.db('local').collection('shop').findOne(
+        {_id: ObjectId(queryId)}, 
+        function(err, item){ 
+          if(err) {
+            console.error(err)
+            return res.status(400).send({
+              success: 'false',
+              message: 'an error occurred',
+            });
+          } else if (!item){
+            return res.status(409).send({
+              success: 'false',
+              message: 'item was not found / had no inventory',
+            });
+          } else {
+            var response = false;
+            if (amount > item.inventory) {
+              response = true
+            }
+            return res.status(201).send({
+              success: 'true',
+              response: response,
+            });
+          }
+        }
+      ))
+    } catch(err) {
+      console.error(err)
+      return res.status(400).send({
+        success: 'false',
+        message: 'not a valid ID or a valid amount',
+      });
+    }
   }
 }
 
