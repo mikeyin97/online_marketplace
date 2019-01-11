@@ -26,7 +26,7 @@ router.post('/api/completeCartPurchase', isLoggedIn, CartController.CompleteCart
 router.post('/login', passport.authenticate('local-login'), AuthController.Login);
 router.post('/signup', passport.authenticate('local-signup'), AuthController.Signup);
 
-router.get('/profile', isLoggedIn, AuthController.Login);
+router.get('/profile', isLoggedIn, AuthController.Profile);
 router.get('/logout', isLoggedIn, AuthController.Logout);
 
 function isLoggedIn(req, res, next) {

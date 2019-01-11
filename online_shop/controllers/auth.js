@@ -10,7 +10,10 @@ class AuthController {
   Profile(req, res){
     return res.status(200).send({
       success: 'true',
-      message: req.user,
+      message: {
+            "id": req.user._id,
+            "username": req.user.username
+          }
     });
   }
 
