@@ -1124,7 +1124,7 @@ describe('Testing the cart', () => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 res.body.success.should.eql('true');
-                res.body.response.should.eql('Cart successfully emptied');
+                res.body.message.should.eql('Cart successfully emptied');
                 res.body.current_cart.should.be.a('Object');
                 res.body.current_cart.items.should.eql([]);
                 res.body.current_cart.price.should.eql(0);

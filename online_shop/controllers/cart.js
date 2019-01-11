@@ -165,7 +165,7 @@ class CartController {
     cart = {items:[], price:0};
     return res.status(200).send({
       success: 'true',
-      response: 'Cart successfully emptied',
+      message: 'Cart successfully emptied',
       current_cart: cart,
     });
   }
