@@ -1,6 +1,6 @@
-let express = require('express');
-let router = require('./routes/index.js');
-let bodyParser = require('body-parser');
+const express = require('express');
+const router = require('./routes/index.js');
+const bodyParser = require('body-parser');
 var passport = require('passport');
 var session = require('express-session');
 var flash = require('connect-flash');
@@ -13,13 +13,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
   secret: 'testing',
   saveUninitialized: true,
-  resave: true
+  resave: true,
 }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(router);
 
-require('./config/passport')(passport); 
+require('./config/passport')(passport);
 
 const PORT = 9999;
 
