@@ -327,5 +327,5 @@ Where items is a list of items in the cart currently, and price is the running s
 1) finish writing docs
 2) Adding security (passport.js)
 - image taken from [https://nisrockk.wordpress.com/2018/08/24/maplestory-m-a-mobile-leveling-guide/](https://nisrockk.wordpress.com/2018/08/24/maplestory-m-a-mobile-leveling-guide/)
-
+- extensions: use mongoose, use graphql
 
