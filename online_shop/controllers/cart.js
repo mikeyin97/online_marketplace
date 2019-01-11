@@ -3,19 +3,19 @@ var request = require('request');
 
 var cart = {items:[], price:0};
 if (process.env.NODE_ENV === 'test'){
-    cart = {
-        items: [
-            {
-                "id": "000000000000000000000002",
-                "title": "pen",
-                "price": 0.99,
-                "count": 1
-            }
-        ],
-        "price": 0.99
-    }
-};
-  
+  cart = {
+    items: [
+      {
+        "id": "000000000000000000000002",
+        "title": "pen",
+        "price": 0.99,
+        "count": 1,
+      },
+    ],
+    "price": 0.99,
+  };
+}
+
 
 class CartController {
 
@@ -72,7 +72,7 @@ class CartController {
         if (cartObj){
           // if item already in cart, just add the amount provided to the count in the cart
           cartObj.count += amountToAdd;
-          cart.price += amountToAdd*cartObj.price
+          cart.price += amountToAdd*cartObj.price;
           return res.status(200).send({
             success: 'true',
             message: 'Your cart has been updated',

@@ -3,10 +3,10 @@ var ObjectId = require('mongodb').ObjectID;
 var collectionName = 'shop';
 
 if (process.env.NODE_ENV === 'test'){
-  collectionName = 'shopTest'
-};
+  collectionName = 'shopTest';
+}
 
-var conn= MongoClient.connect('mongodb://localhost:27017/', { useNewUrlParser: true }).then(client => 
+var conn= MongoClient.connect('mongodb://localhost:27017/', { useNewUrlParser: true }).then(client =>
   client.db('local').collection(collectionName)
 );
 
