@@ -1,4 +1,7 @@
 # Online Marketplace
+
+<img src="https://nisrockk.files.wordpress.com/2016/02/cropped-ms-banner1.jpg" />
+
 Hello! My name is Michael and this is my backend mockup of a online marketplace API. This app was built using
 the Express framework for node.js, leveraging mongoDB as my database and Mocha/Chai for my testing. 
 
@@ -30,7 +33,7 @@ the Express framework for node.js, leveraging mongoDB as my database and Mocha/C
 
 <a name="testing"></a>
 ## Testing
-Tests are written in mocha and chai. Tests are located in `online_shop/test/test.js`
+Tests are written using mocha and chai. Tests are located in `online_shop/test/test.js`
 1) Navigate into online_shop folder with `cd online_shop`.
 2) Run tests with `npm run test`.
 
@@ -192,7 +195,7 @@ Where items is a list of items in the cart currently, and price is the running s
     - **400**: Missing parameters, ID not found, ID not valid, amount not valid
 
 #### GET /api/getItems
-- **Description**: Get all items according to the passed query parameters
+- **Description**: Get all items according to the passed query parameters.
 - **Query Parameters**:
     - **id**: ID of the product
     - **title**: Amount to compare to
@@ -265,7 +268,7 @@ Where items is a list of items in the cart currently, and price is the running s
 - **Errors by Status**:
 
 #### GET /api/ViewCart
-- **Description**: Views your current cart
+- **Description**: Views your current cart.
 - **Expected Response**:
     - **status**: 200
     - **reponse body**:
