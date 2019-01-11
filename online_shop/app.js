@@ -3,7 +3,6 @@ const router = require('./routes/index.js');
 const bodyParser = require('body-parser');
 var passport = require('passport');
 var session = require('express-session');
-var flash = require('connect-flash');
 
 const app = express();
 

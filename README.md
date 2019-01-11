@@ -324,8 +324,7 @@ Where items is a list of items in the cart currently, and price is the running s
 
 <a name="misc"></a>
 ## To-do List
-1) finish writing docs
-2) Adding security (passport.js)
+1) finish writing docs for auth and how tos
 - image taken from [https://nisrockk.wordpress.com/2018/08/24/maplestory-m-a-mobile-leveling-guide/](https://nisrockk.wordpress.com/2018/08/24/maplestory-m-a-mobile-leveling-guide/)
 - testing references [https://scotch.io/tutorials/test-a-node-restful-api-with-mocha-and-chai](https://scotch.io/tutorials/test-a-node-restful-api-with-mocha-and-chai)
 - auth references [https://scotch.io/tutorials/easy-node-authentication-setup-and-local](https://scotch.io/tutorials/easy-node-authentication-setup-and-local)

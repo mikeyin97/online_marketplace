@@ -2,6 +2,7 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 var Strategy = require('passport-local').Strategy;
 var collectionName = 'users';
+var bcrypt = require('bcrypt');
 if (process.env.NODE_ENV === 'test'){
   collectionName = 'usersTest';
 }
@@ -42,7 +43,7 @@ module.exports = function(passport) {
         if (!user)
           return done(null, false);
 
-        if (user.password !== password)
+        if (!bcrypt.compareSync(password, user.password))
           return done(null, false);
 
         return done(null, user);
@@ -64,19 +65,15 @@ module.exports = function(passport) {
             return done(err);
 
           if (user) {
-            return done(null, false, {
-              "Success": "false",
-              "Response": "ERROR: Email is already in use"});
+            return done(null, false,);
           } else {
-
+            let hash = bcrypt.hashSync(password, 10);
             user = {
               username: username,
-              password: password,
+              password: hash,
             };
             conn.then(client=> client.insertOne(user, (function(err, docs) {
-              return done(null, user, {
-                "Success": "true",
-                "Response": "Signed Up"});
+              return done(null, user);
             })));
           }
         }));
