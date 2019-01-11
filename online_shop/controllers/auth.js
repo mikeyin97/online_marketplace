@@ -11,9 +11,9 @@ class AuthController {
     return res.status(200).send({
       success: 'true',
       message: {
-            "id": req.user._id,
-            "username": req.user.username
-          }
+        "id": req.user._id,
+        "username": req.user.username,
+      },
     });
   }
 

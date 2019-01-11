@@ -65,9 +65,9 @@ module.exports = function(passport) {
             return done(err);
 
           if (user) {
-            return done(null, false,);
+            return done(null, false);
           } else {
-            let hash = bcrypt.hashSync(password, 10);
+            const hash = bcrypt.hashSync(password, 10);
             user = {
               username: username,
               password: hash,
