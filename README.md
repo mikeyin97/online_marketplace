@@ -38,7 +38,7 @@ Tests are written in mocha and chai. Tests are located in `online_shop/test/test
 ## Schemas
 I use mongoDB as my noSQL database for storing items in the shop. It runs on localhost, port 27017. 
 
-The 'real' data is hosted in the `shop` collection of the `local` database. Testing data uses the `shopTest` collection of the `local` database. Data entries (items) will have the following schema:
+The 'real' data is hosted in the `shop` collection of the `local` database. Testing data uses the `shopTest` collection of the `local` database. Data entries `items` will have the following schema:
 
 ```
 {   
@@ -51,11 +51,11 @@ The 'real' data is hosted in the `shop` collection of the `local` database. Test
 
 **_id** is the primary key for the database.
 
-**Note**: I treat title + price as a composite key that uniquely
+**Note**: I treat `title` + `price` as a composite key that uniquely
 defines an entry. Therefore, it is possible to have, for example, a
 banana that costs $2.00 and a banana that costs $3.00 as seperate entries in the table. 
 
-When using the shopping cart, your cart will look like:
+When using the shopping cart, your `cart` will look like:
 
 ```
 {   
