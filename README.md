@@ -5,7 +5,7 @@ the Express framework for node.js, leveraging mongoDB as my database and Mocha/C
 ## Table of Contents
 1. [ Setup ](#setup)
 2. [ Testing Notes ](#testing)
-3. [ Database Schema ](#database)
+3. [ Schemas and Structures ](#database)
 4. [ Endpoints ](#endpoints)
 5. [ How-Tos ](#howtos)
     - [ Make a Purchase ](#makepurchase)
@@ -29,16 +29,16 @@ the Express framework for node.js, leveraging mongoDB as my database and Mocha/C
 5) Start the application with `npm run start`. The api runs on localhost, port 9999.
 
 <a name="testing"></a>
-## Testing Notes
+## Testing
 Tests are written in mocha and chai. Tests are located in `online_shop/test/test.js`
 1) Navigate into online_shop folder with `cd online_shop`.
 2) Run tests with `npm run test`.
 
 <a name="database"></a>
 ## Schemas
-I use mongoDB as my noSQL database for storing values in the shop. It runs on localhost, port 27017. 
+I use mongoDB as my noSQL database for storing items in the shop. It runs on localhost, port 27017. 
 
-The 'real' data is hosted in the `shop` collection of the `local` database. Testing data uses the `shopTest` collection of the `local` database. Data entries have the following schema:
+The 'real' data is hosted in the `shop` collection of the `local` database. Testing data uses the `shopTest` collection of the `local` database. Data entries (items) will have the following schema:
 
 ```
 {   
@@ -54,6 +54,17 @@ The 'real' data is hosted in the `shop` collection of the `local` database. Test
 **Note**: I treat title + price as a composite key that uniquely
 defines an entry. Therefore, it is possible to have, for example, a
 banana that costs $2.00 and a banana that costs $3.00 as seperate entries in the table. 
+
+When using the shopping cart, your cart will look like:
+
+```
+{   
+    items: [items],
+    price: Number
+}
+```
+
+Where items is a list of items in the cart currently, and price is the running sum of the price of items in the cart. 
 
 <a name="endpoints"></a>
 ## Endpoints
@@ -171,7 +182,7 @@ banana that costs $2.00 and a banana that costs $3.00 as seperate entries in the
 - **Description**: Checks if a given amount passed in strictly exceeds the given inventory of an item (found by passed ID)
 - **Body**:
     - **id**: ID of the product *(required)*
-    - **price**: Amount to compare to *(required)*
+    - **amount**: Amount to compare to *(required)*
 - **Expected Response**:
     - **status**: 200
     - **reponse body**:
@@ -202,7 +213,65 @@ banana that costs $2.00 and a banana that costs $3.00 as seperate entries in the
 - **Errors by Status**:
     - **400**: Missing parameters, invalid parameters
 
-####
+#### POST /api/emptyCart
+- **Description**: Completely clears the cart
+- **Body**:
+- **Expected Response**:
+    - **status**: 200
+    - **reponse body**:
+        - **success**: true
+        - **message**: Cart successfully emptied
+        - **current_cart**: cart
+- **Errors by Status**:
+
+#### POST /api/addToCartById
+- **Description**: Adds a provided amount of a product specified by given product id to the cart. 
+- **Body**:
+    - **id**: ID of the product *(required)*
+    - **amount**: Amount to be added to the cart *(default:1)*
+- **Expected Response**:
+    - **status**: 200
+    - **reponse body**:
+        - **success**: true
+        - **message**: Your cart has been updated
+        - **current_cart**: cart
+- **Errors by Status**:
+    - **400**: Missing parameters, ID not found, ID not valid, amount not valid, total amount + cart amount exceeds inventory
+
+#### POST /api/removeFromCartById
+- **Description**: Removes a provided amount of a product specified by given product id to the cart. 
+- **Body**:
+    - **id**: ID of the product *(required)*
+    - **amount**: Amount to be added to the cart *(default:1)*
+- **Expected Response**:
+    - **status**: 200
+    - **reponse body**:
+        - **success**: true
+        - **message**: Your cart has been updated
+        - **current_cart**: cart
+- **Errors by Status**:
+    - **400**: Missing parameters, ID not found, ID not valid, amount not valid, removing more than what is in the cart, removing an object not in the cart
+
+#### POST /api/completeCartPurchase
+- **Description**: Completes the purchase by finalizing the cart and making reflected changes in the shop. 
+- **Body**:
+- **Expected Response**:
+    - **status**: 200
+    - **reponse body**:
+        - **success**: true
+        - **response**: purchase complete
+        - **purchase**: cart
+        - **current_cart**: (empty) cart
+- **Errors by Status**:
+
+#### GET /api/ViewCart
+- **Description**: Views your current cart
+- **Expected Response**:
+    - **status**: 200
+    - **reponse body**:
+        - **success**: true
+        - **current_cart**: cart
+- **Errors by Status**:
 
 <a name="howtos"></a>
 ## How-Tos
@@ -222,11 +291,11 @@ banana that costs $2.00 and a banana that costs $3.00 as seperate entries in the
 <a name="queryid"></a>
 - Query for a Specific Object by ID
 
-<a name="addcart"></a>
-- Add to Your Shopping Cart
-
 <a name="viewcart"></a>
 - View Your Shopping Cart
+
+<a name="addcart"></a>
+- Add to Your Shopping Cart
 
 <a name="removecart"></a>
 - Remove From Your Shopping Cart
