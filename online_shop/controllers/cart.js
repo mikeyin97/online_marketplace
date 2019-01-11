@@ -21,7 +21,6 @@ class CartController {
         id = ObjectId(req.body.id);
       }
     } catch(err) {
-      console.log(err);
       return res.status(400).send({
         success: 'false',
         message: 'Not a valid id',
@@ -107,7 +106,6 @@ class CartController {
         id = ObjectId(req.body.id);
       }
     } catch(err) {
-      console.log(err);
       return res.status(400).send({
         success: 'false',
         message: 'Not a valid id',

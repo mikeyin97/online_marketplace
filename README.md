@@ -35,7 +35,7 @@ Tests are written in mocha and chai. Tests are located in `online_shop/test/test
 2) Run tests with `npm run test`.
 
 <a name="database"></a>
-## Database Schema
+## Schemas
 I use mongoDB as my noSQL database for storing values in the shop. It runs on localhost, port 27017. 
 
 The 'real' data is hosted in the `shop` collection of the `local` database. Testing data uses the `shopTest` collection of the `local` database. Data entries have the following schema:

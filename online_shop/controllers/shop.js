@@ -91,7 +91,6 @@ class ShopController {
         id = ObjectId(req.body.id);
       }
     } catch(err) {
-      console.log(err);
       return res.status(400).send({
         success: 'false',
         message: 'Not a valid id',
@@ -272,7 +271,6 @@ class ShopController {
         id = ObjectId(req.body.id);
       }
     } catch(err) {
-      console.log(err);
       return res.status(400).send({
         success: 'false',
         message: 'Not a valid id',
@@ -283,7 +281,6 @@ class ShopController {
       {_id: ObjectId(id)},
       function(err, item){
         if(err) {
-          console.error(err);
           return res.status(400).send({
             success: 'false',
             message: 'an error occurred',
@@ -357,7 +354,6 @@ class ShopController {
         id = ObjectId(req.body.id);
       }
     } catch(err) {
-      console.log(err);
       return res.status(400).send({
         success: 'false',
         message: 'Not a valid id',
@@ -475,7 +471,6 @@ class ShopController {
         }
       }
     } catch(err) {
-      console.log(err);
       return res.status(400).send({
         success: 'false',
         message: 'Invalid parameters',
@@ -523,7 +518,6 @@ class ShopController {
         id = ObjectId(req.body.id);
       }
     } catch(err) {
-      console.log(err);
       return res.status(400).send({
         success: 'false',
         message: 'Not a valid id',
@@ -543,7 +537,6 @@ class ShopController {
         throw new Error("Amount is not a number");
       }
     } catch(err) {
-      console.log(err);
       return res.status(400).send({
         success: 'false',
         message: 'Not a valid amount',

@@ -157,6 +157,69 @@ describe('Testing the shop', () => {
             });
     });
     describe('/POST /api/incrementItemById', () => {
+        it('it should POST to increment item inventory', (done) => {
+            let query = {
+                id: "000000000000000000000002"
+            }
+            chai.request(server)
+            .post('/api/incrementItemById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('true');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('Item inventory incremented successfully');
+            done();
+            });
+        }); 
+        it('it should return item not found', (done) => {
+            let query = {
+                id: "000000000000000000000010"
+            }
+            chai.request(server)
+            .post('/api/incrementItemById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('false');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('Item was not found');
+            done();
+            });
+        });
+        it('it should return id required', (done) => {
+            let query = {
+            }
+            chai.request(server)
+            .post('/api/incrementItemById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('false');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('An id is required');
+            done();
+            });
+        }); 
+        it('it should return item not found', (done) => {
+            let query = {
+                id: "000000000000000000000"
+            }
+            chai.request(server)
+            .post('/api/incrementItemById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('false');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('Not a valid id');
+            done();
+            });
+        });  
     });
     describe('/POST /incrementItemByTitleAndPrice', () => {
     });
