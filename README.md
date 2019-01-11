@@ -30,7 +30,9 @@ the Express framework for node.js, leveraging mongoDB as my database and Mocha/C
 
 <a name="testing"></a>
 ## Testing Notes
-1) Placeholder
+Tests are written in mocha and chai. Tests are located in `online_shop/test/test.js`
+1) Navigate into online_shop folder with `cd online_shop`.
+2) Run tests with `npm run test`.
 
 <a name="database"></a>
 ## Database Schema
@@ -237,6 +239,8 @@ banana that costs $2.00 and a banana that costs $3.00 as seperate entries in the
 
 <a name="todos"></a>
 ## To-do List
+keep running sum in cart!!!
+finish writing docs
 1) Unit Tests (in mocha + chai)
 2) GraphQL
 3) Adding security (passport)

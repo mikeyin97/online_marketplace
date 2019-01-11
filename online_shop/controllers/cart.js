@@ -1,7 +1,7 @@
 var ObjectId = require('mongodb').ObjectID;
 var request = require('request');
 
-var cart = [];
+var cart = {items:[], price:0};
 
 class CartController {
 
@@ -36,7 +36,7 @@ class CartController {
     var amountToCompare = amount;
 
     // the value we compare to inventory is the amount provided + the count in the cart
-    var cartObj = cart.find(o => o.id === req.body.id);
+    var cartObj = cart.items.find(o => o.id === req.body.id);
     amountToCompare += cartObj ? cartObj.count : 0;
     request.post({
       url:     'http://localhost:9999/api/amountGtInventory',
@@ -57,6 +57,7 @@ class CartController {
         if (cartObj){
           // if item already in cart, just add the amount provided to the count in the cart
           cartObj.count += amountToAdd;
+          cart.price += amountToAdd*cartObj.price
           return res.status(200).send({
             success: 'true',
             message: 'Your cart has been updated',
@@ -77,7 +78,8 @@ class CartController {
               });
             } else {
               var item = body.response.items[0];
-              cart.push({id: req.body.id, title: item.title, price: item.price, count: amountToAdd});
+              cart.items.push({id: req.body.id, title: item.title, price: item.price, count: amountToAdd});
+              cart.price += amountToAdd*item.price;
               return res.status(200).send({
                 success: 'true',
                 message: 'Your cart has been updated',
@@ -117,7 +119,8 @@ class CartController {
       amount = parseInt(req.body.amount);
     }
 
-    var cartObj = cart.find(o => o.id === req.body.id);
+    var cartObj = cart.items.find(o => o.id === req.body.id);
+    cart.price -= (cartObj.price*amount);
     if (!cartObj){
       return res.status(200).send({
         success: 'false',
@@ -144,7 +147,7 @@ class CartController {
   }
 
   EmptyCart(req, res){
-    cart = [];
+    cart = {items:[], price:0};
     return res.status(200).send({
       success: 'true',
       response: 'Cart successfully emptied',
@@ -155,7 +158,7 @@ class CartController {
   ViewCart(req, res){
     var response = {};
     response.cart = cart;
-    response.count = cart.length;
+    response.count = cart.items.length;
     return res.status(200).send({
       success: 'true',
       current_cart: response,
@@ -169,7 +172,7 @@ class CartController {
     var cartTotal = 0;
     var oldcart = null;
 
-    if (cart.length === 0){
+    if (cart.items.length === 0){
       // if your cart is empty
       oldcart = cart;
       cart = [];
@@ -178,11 +181,10 @@ class CartController {
         response: 'Purchase completed (you should buy something next time!)',
         purchase: oldcart,
         current_cart: cart,
-        cost: cartTotal,
       });
     }
-    cart.forEach(function(item, index, array){
-      cartTotal += item.count * item.price;
+    cart.items.forEach(function(item, index, array){
+      //cartTotal += item.count * item.price;
       request.post({
         url:     'http://localhost:9999/api/decrementItemById',
         body: { id: item.id, decrement: item.count},
@@ -199,7 +201,6 @@ class CartController {
           response: 'Purchase completed',
           purchase: oldcart,
           current_cart: cart,
-          cost: cartTotal,
         });
       }
     });

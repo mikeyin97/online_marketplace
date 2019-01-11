@@ -457,6 +457,9 @@ class ShopController {
         title = req.query.title;
       }
       if (req.query.available) {
+        if (req.query.available !== "true" && req.query.available !== "false"){
+          throw new Error("Available is not a boolean");
+        }
         available = Boolean(req.query.available);
       }
       if (req.query.lowerprice) {
