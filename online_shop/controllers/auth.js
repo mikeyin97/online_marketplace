@@ -1,15 +1,3 @@
-/*var MongoClient = require('mongodb').MongoClient;
-var collectionName = 'users';
-
-if (process.env.NODE_ENV === 'test'){
-  collectionName = 'usersTest'
-};
-
-var conn = MongoClient.connect('mongodb://localhost:27017/', { useNewUrlParser: true }).then(client => 
-  client.db('local').collection(collectionName)
-);
-  
-
 class AuthController {
 
     Login(req, res){
@@ -30,4 +18,4 @@ class AuthController {
 }
 
 const authController = new AuthController();
-module.exports = authController;*/
+module.exports = authController;

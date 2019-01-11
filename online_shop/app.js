@@ -8,7 +8,6 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(router);
 
 app.use(session({
   secret: 'testing',
@@ -17,11 +16,16 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(router);
+
 
 require('./config/passport')(passport); 
 
 const PORT = 9999;
 
+app.get("/", (req, res) => res.json({message: "Welcome to the Marketplace!"}));
+
+/*
 app.post('/login', passport.authenticate('local-login'),function(req, res){
   console.log("logged in");
   return res.status(200).send({
@@ -35,7 +39,6 @@ app.get('/profile', isLoggedIn, function(req, res) {
   console.log('user', req.user);
 });
 
-app.get("/", (req, res) => res.json({message: "Welcome to the Marketplace!"}));
 
 function isLoggedIn(req, res, next) {
   console.log(req.user);
@@ -45,9 +48,12 @@ function isLoggedIn(req, res, next) {
       return next();
 
   // if they aren't redirect them to the home page
-  res.redirect('/');
+  return res.status(401).send({
+    success: 'false',
+    message: 'Unauthenticated',
+  });
 }
-
+*/
 
 
 app.listen(PORT, () => {

@@ -1,8 +1,8 @@
 let express = require('express');
 let ShopController = require('../controllers/shop');
 let CartController = require('../controllers/cart');
-//let AuthController = require('../controllers/auth');
-
+var passport = require('passport');
+let AuthController = require('../controllers/auth');
 
 const router = express.Router();
 
@@ -23,17 +23,16 @@ router.post('/api/addToCartById', CartController.AddToCartById);
 router.post('/api/removeFromCartById', CartController.RemoveFromCartById);
 router.post('/api/completeCartPurchase', CartController.CompleteCartPurchase);
 
-/*router.post('/login', passport.authenticate('local-login'), AuthController.Login);
+router.post('/login', passport.authenticate('local-login'), AuthController.Login);
 router.get('/profile', isLoggedIn, AuthController.Login);
 
 function isLoggedIn(req, res, next) {
-    console.log('auth?', req.isAuthenticated())
-    // if user is authenticated in the session, carry on 
     if (req.isAuthenticated())
         return next();
-  
-    // if they aren't redirect them to the home page
-    res.redirect('/');
-}*/
+    return res.status(401).send({
+        success: 'false',
+        message: 'Unauthenticated',
+        });
+}
   
 module.exports = router;
