@@ -3,14 +3,18 @@
 <img src="https://nisrockk.files.wordpress.com/2016/02/cropped-ms-banner1.jpg" />
 
 Hello! My name is Michael and this is my backend mockup of a online marketplace API. This app was built using
-the Express framework for node.js, leveraging mongoDB as my database and Mocha/Chai for my testing. 
+the Express framework for node.js, leveraging mongoDB as my database, mocha and chai for my testing, and passport-local for authentication.
+
+This app allows you to make requests to a shop database, that stores information about products, such as their title, price, and inventory. You can add new products, remove products, purchase products, etc. This app also allows you to add to a cart, which you can queue up products you want to buy. By completing your purchase, these items are removed from the shop, and your purchase price and items are displayed. 
 
 ## Table of Contents
+
 1. [ Setup ](#setup)
 2. [ Testing Notes ](#testing)
-3. [ Schemas and Structures ](#database)
-4. [ Endpoints ](#endpoints)
-5. [ How-Tos ](#howtos)
+3. [ Authentication Notes ](#auth)
+4. [ Schemas and Structures ](#database)
+5. [ Endpoints ](#endpoints)
+6. [ Usage Guide ](#howtos)
     - [ Make a Purchase ](#makepurchase)
     - [ Query for All Products ](#queryall)
     - [ Query for Available Products ](#queryavailable)
@@ -21,27 +25,36 @@ the Express framework for node.js, leveraging mongoDB as my database and Mocha/C
     - [ Remove From Your Shopping Cart ](#removecart)
     - [ Delete Your Shopping Cart ](#deletecart)     
     - [ Complete Your Purchase ](#completecart)
-6. [ To-do List ](#todos)
+7. [ More Info ](#misc)
 
 <a name="setup"></a>
 ## Setup
+
 1) Clone the repository.
 2) Install [mongoDB](https://docs.mongodb.com/manual/installation/)
-3) Navigate into online_shop folder with `cd online_shop`.
-4) Install dependencies with `npm install`. A list of dependencies can be found in package.json
-5) Start the application with `npm run start`. The api runs on localhost, port 9999.
+3) Spin up mongoDB with `sudo mongod`. 
+4) Navigate into online_shop folder with `cd online_shop`.
+5) Install dependencies with `npm install`. A list of dependencies can be found in package.json
+6) Start the application with `npm run start`. The api runs on localhost, port 9999.
 
 <a name="testing"></a>
-## Testing
-Tests are written using mocha and chai. Tests are located in `online_shop/test/test.js`
-1) Navigate into online_shop folder with `cd online_shop`.
-2) Run tests with `npm run test`.
+## Testing Notes
+
+Tests are written using mocha and chai. In the testing environment, endpoints use a different mongo collection `shopTest` than in the non-testing environment. Tests are located in `online_shop/test/test.js`
+
+1) Spin up mongoDB with `sudo mongod`. 
+2) Navigate into online_shop folder with `cd online_shop`.
+3) Run tests with `npm run test`.
+
+<a name="auth"></a>
+## Authentication Notes
 
 <a name="database"></a>
 ## Schemas
+
 I use mongoDB as my noSQL database for storing items in the shop. It runs on localhost, port 27017. 
 
-The 'real' data is hosted in the `shop` collection of the `local` database. Testing data uses the `shopTest` collection of the `local` database. Data entries `items` will have the following schema:
+The non-testing data is hosted in the `shop` collection of the `local` database. Testing data uses the `shopTest` collection of the `local` database. Data entries `items` will have the following schema:
 
 ```
 {   
@@ -277,7 +290,7 @@ Where items is a list of items in the cart currently, and price is the running s
 - **Errors by Status**:
 
 <a name="howtos"></a>
-## How-Tos
+## Usage Guide
 
 <a name="makepurchase"></a>
 - Make a Purchase
@@ -286,13 +299,13 @@ Where items is a list of items in the cart currently, and price is the running s
 - Query for All Products
 
 <a name="queryavailable"></a>
-- Query for Available Products
+- Query for Available Products Only
 
 <a name="queryrange"></a>
 - Query for Products with a Price in a Range
 
 <a name="queryid"></a>
-- Query for a Specific Object by ID
+- Query for a Single Item 
 
 <a name="viewcart"></a>
 - View Your Shopping Cart
@@ -309,9 +322,10 @@ Where items is a list of items in the cart currently, and price is the running s
 <a name="completecart"></a>
 - Complete Your Purchase
 
-<a name="todos"></a>
+<a name="misc"></a>
 ## To-do List
 1) finish writing docs
 2) Adding security (passport.js)
+- image taken from [https://nisrockk.wordpress.com/2018/08/24/maplestory-m-a-mobile-leveling-guide/](https://nisrockk.wordpress.com/2018/08/24/maplestory-m-a-mobile-leveling-guide/)
 
 
