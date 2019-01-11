@@ -28,36 +28,58 @@ module.exports = function(passport) {
     });
 
     passport.use('local-login', new Strategy({
-        // by default, local strategy uses username and password, we will override with email
         usernameField : 'username',
         passwordField : 'password',
-        passReqToCallback : true // allows us to pass back the entire request to the callback
+        passReqToCallback : true
     },
     function(req, username, password, done) {
-        console.log("username", username, password);
-        // asynchronous
-        // User.findOne wont fire unless data is sent back
         conn.then(client=> client.findOne(
             {username: username},
             function(err, user){
-            console.log(user);
-                // if there are any errors, return the error
-            // if there are any errors, return the error before anything else
             if (err)
             return done(err);
 
-            // if no user is found, return the message
             if (!user)
-                return done(null, false); // req.flash is the way to set flashdata using connect-flash
+                return done(null, false); 
 
-            // if the user is found but the password is wrong
             if (user.password !== password)
-                return done(null, false); // create the loginMessage and save it to session as flashdata
+                return done(null, false); 
             
-            // all is well, return successful user
-            console.log("HI");
             return done(null, user);
         }));
 
+    }));
+
+    passport.use('local-signup', new Strategy({
+        usernameField : 'username',
+        passwordField : 'password',
+        passReqToCallback : true
+    },
+    function(req, username, password, done) {
+        process.nextTick(function() {
+            conn.then(client=> client.findOne(
+                {username: username},
+                function(err, user){
+                    if (err)
+                    return done(err);
+
+                    if (user) {
+                        return done(null, false, {
+                            "Success": "false",
+                            "Response": "ERROR: Email is already in use"});
+                    } else {
+
+                    user = {
+                        username: username,
+                        password: password
+                    };
+                    conn.then(client=> client.insertOne(user, (function(err, docs) {
+                        return done(null, user, {
+                            "Success": "true",
+                            "Response": "Signed Up"});
+                    })));
+                }
+            }));
+        });
     }));
 };

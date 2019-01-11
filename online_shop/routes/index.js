@@ -6,27 +6,32 @@ let AuthController = require('../controllers/auth');
 
 const router = express.Router();
 
-router.post('/api/addItem', ShopController.AddItem);
-router.post('/api/incrementItemById', ShopController.IncrementItemInventoryById);
-router.post('/api/incrementItemByTitleAndPrice', ShopController.IncrementItemInventoryByTitleAndPrice);
-router.post('/api/upsertItemByTitleAndPrice', ShopController.UpsertItemByTitleAndPrice);
-router.post('/api/decrementItemById', ShopController.DecrementItemInventoryById);
-router.post('/api/decrementItemByTitleAndPrice', ShopController.DecrementItemInventoryByTitleAndPrice);
-router.post('/api/deleteItemById', ShopController.DeleteItemById);
-router.post('/api/deleteItemByTitleAndPrice', ShopController.DeleteItemByTitleAndPrice);
-router.post('/api/amountGtInventory', ShopController.AmountGtInventory);
-router.get('/api/getItems', ShopController.GetItems);
+router.post('/api/addItem', isLoggedIn, ShopController.AddItem);
+router.post('/api/incrementItemById', isLoggedIn, ShopController.IncrementItemInventoryById);
+router.post('/api/incrementItemByTitleAndPrice', isLoggedIn, ShopController.IncrementItemInventoryByTitleAndPrice);
+router.post('/api/upsertItemByTitleAndPrice', isLoggedIn, ShopController.UpsertItemByTitleAndPrice);
+router.post('/api/decrementItemById', isLoggedIn, ShopController.DecrementItemInventoryById);
+router.post('/api/decrementItemByTitleAndPrice', isLoggedIn, ShopController.DecrementItemInventoryByTitleAndPrice);
+router.post('/api/deleteItemById', isLoggedIn, ShopController.DeleteItemById);
+router.post('/api/deleteItemByTitleAndPrice', isLoggedIn, ShopController.DeleteItemByTitleAndPrice);
+router.post('/api/amountGtInventory', isLoggedIn, ShopController.AmountGtInventory);
+router.get('/api/getItems', isLoggedIn, ShopController.GetItems);
 
-router.get('/api/viewCart', CartController.ViewCart);
-router.post('/api/emptyCart', CartController.EmptyCart);
-router.post('/api/addToCartById', CartController.AddToCartById);
-router.post('/api/removeFromCartById', CartController.RemoveFromCartById);
-router.post('/api/completeCartPurchase', CartController.CompleteCartPurchase);
+router.get('/api/viewCart', isLoggedIn, CartController.ViewCart);
+router.post('/api/emptyCart', isLoggedIn, CartController.EmptyCart);
+router.post('/api/addToCartById', isLoggedIn, CartController.AddToCartById);
+router.post('/api/removeFromCartById', isLoggedIn, CartController.RemoveFromCartById);
+router.post('/api/completeCartPurchase', isLoggedIn, CartController.CompleteCartPurchase);
 
 router.post('/login', passport.authenticate('local-login'), AuthController.Login);
+router.post('/signup', passport.authenticate('local-signup'), AuthController.Signup);
+
 router.get('/profile', isLoggedIn, AuthController.Login);
+router.get('/logout', isLoggedIn, AuthController.Logout);
 
 function isLoggedIn(req, res, next) {
+    if (process.env.NODE_ENV === 'test') //testing skips login
+        return next();
     if (req.isAuthenticated())
         return next();
     return res.status(401).send({
