@@ -278,22 +278,22 @@ class ShopController {
     }
 
     conn.then(client=> client.deleteOne(
-      {_id: ObjectId(id)},
+      {_id: id},
       function(err, item){
         if(err) {
           return res.status(400).send({
             success: 'false',
-            message: 'an error occurred',
+            message: 'An error occurred',
           });
         } else if (item.deletedCount === 0){
           return res.status(400).send({
             success: 'false',
-            message: 'item was not found',
+            message: 'Item was not found',
           });
         } else {
           return res.status(200).send({
             success: 'true',
-            message: 'item deleted successfully',
+            message: 'Item deleted successfully',
           });
         }
       }
@@ -374,17 +374,17 @@ class ShopController {
           console.error(err);
           return res.status(400).send({
             success: 'false',
-            message: 'an error occurred',
+            message: 'An error occurred',
           });
         } else if (!item.value){
           return res.status(400).send({
             success: 'false',
-            message: 'item was not found / had insufficient inventory',
+            message: 'Item was not found / had insufficient inventory',
           });
         } else {
-          return res.status(201).send({
+          return res.status(200).send({
             success: 'true',
-            message: 'item inventory decremented successfully',
+            message: 'Item inventory decremented successfully',
           });
         }
       }
@@ -554,7 +554,7 @@ class ShopController {
             message: 'An error occurred',
           });
         } else if (!item){
-          return res.status(409).send({
+          return res.status(400).send({
             success: 'false',
             message: 'Item was not found',
           });
