@@ -239,10 +239,7 @@ banana that costs $2.00 and a banana that costs $3.00 as seperate entries in the
 
 <a name="todos"></a>
 ## To-do List
-keep running sum in cart!!!
-finish writing docs
-1) Unit Tests (in mocha + chai)
-2) GraphQL
-3) Adding security (passport)
+1) finish writing docs
+2) Adding security (passport.js)
 
 

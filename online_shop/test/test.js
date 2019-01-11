@@ -779,7 +779,6 @@ describe('Testing the shop', () => {
             });
         });  
     });
-
 });
 
 describe('Testing the cart', () => {
@@ -823,7 +822,6 @@ describe('Testing the cart', () => {
             chai.request(server)
                 .get('/api/viewCart')
                 .end((err, res) => {
-                    console.log(res.body);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.success.should.eql('true');
@@ -837,4 +835,303 @@ describe('Testing the cart', () => {
             }
         );
     });
+    describe('/POST /api/addToCartById', () => {
+        it('it should POST to add item to cart', (done) => {
+            let query = {
+                id: "000000000000000000000002",
+                amount: 20,
+            }
+            chai.request(server)
+            .post('/api/addToCartById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('true');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('Your cart has been updated');
+                res.body.current_cart.should.be.a('object');
+                res.body.current_cart.items.should.be.a('array');
+                res.body.current_cart.price.should.be.a('number');
+            done();
+            });
+        }); 
+        it('it should POST to add item to cart with the default amount', (done) => {
+            let query = {
+                id: "000000000000000000000002",
+            }
+            chai.request(server)
+            .post('/api/addToCartById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('true');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('Your cart has been updated');
+                res.body.current_cart.should.be.a('object');
+                res.body.current_cart.items.should.be.a('array');
+                res.body.current_cart.price.should.be.a('number');
+            done();
+            });
+        }); 
+        it('it should POST to add new item to cart', (done) => {
+            let query = {
+                id: "000000000000000000000004",
+                amount: 5,
+            }
+            chai.request(server)
+            .post('/api/addToCartById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('true');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('Your cart has been updated');
+                res.body.current_cart.should.be.a('object');
+                res.body.current_cart.items.should.be.a('array');
+                res.body.current_cart.price.should.be.a('number');
+            done();
+            });
+        }); 
+        it('ERROR: it should return an error (id required)', (done) => {
+            let query = {
+                amount: 2,
+            }
+            chai.request(server)
+            .post('/api/addToCartById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('false');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('An id is required');
+                res.body.current_cart.should.be.a('object');
+                res.body.current_cart.items.should.be.a('array');
+                res.body.current_cart.price.should.be.a('number');
+            done();
+            });
+        }); 
+        it('ERROR: it should return an error (invalid id)', (done) => {
+            let query = {
+                id: "123",
+                amount: 2,
+            }
+            chai.request(server)
+            .post('/api/addToCartById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('false');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('Not a valid id');
+                res.body.current_cart.should.be.a('object');
+                res.body.current_cart.items.should.be.a('array');
+                res.body.current_cart.price.should.be.a('number');
+            done();
+            });
+        }); 
+        it('ERROR: it should return an error (card amount would exceed inventory)', (done) => {
+            let query = {
+                id: "000000000000000000000002",
+                amount: 10000,
+            }
+            chai.request(server)
+            .post('/api/addToCartById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('false');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('Your cart amount would exceed current inventory. The item has not been added.');
+                res.body.current_cart.should.be.a('object');
+                res.body.current_cart.items.should.be.a('array');
+                res.body.current_cart.price.should.be.a('number');
+            done();
+            });
+        }); 
+        it('ERROR: it should return an error (item with this id nonexistant)', (done) => {
+            let query = {
+                id: "000000000000000000000009",
+                amount: 100,
+            }
+            chai.request(server)
+            .post('/api/addToCartById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('false');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('Item with this ID does not exist');
+            done();
+            });
+        }); 
+    });
+    describe('/POST /api/removeFromCartById', () => {
+        it('it should POST to remove the item from cart (default amount)', (done) => {
+            let query = {
+                id: "000000000000000000000002",
+            }
+            chai.request(server)
+            .post('/api/removeFromCartById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('true');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('Your cart has been updated.');
+                res.body.current_cart.should.be.a('object');
+                res.body.current_cart.items.should.be.a('array');
+                res.body.current_cart.price.should.be.a('number');
+            done();
+            });
+        }); 
+        it('it should POST to remove the item from cart (default amount)', (done) => {
+            let query = {
+                id: "000000000000000000000002",
+                amount: 2, 
+            }
+            chai.request(server)
+            .post('/api/removeFromCartById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('true');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('Your cart has been updated.');
+                res.body.current_cart.should.be.a('object');
+                res.body.current_cart.items.should.be.a('array');
+                res.body.current_cart.price.should.be.a('number');
+            done();
+            });
+        }); 
+        it('ERROR: it should return an error (item not in cart)', (done) => {
+            let query = {
+                id: "000000000000000000000003",
+                amount: 10,
+            }
+            chai.request(server)
+            .post('/api/removeFromCartById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('false');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('This item does not exist in your cart.');
+                res.body.current_cart.should.be.a('object');
+                res.body.current_cart.items.should.be.a('array');
+                res.body.current_cart.price.should.be.a('number');
+            done();
+            });
+        }); 
+        it('ERROR: it should return an error (id required)', (done) => {
+            let query = {
+                id: "000000000000000000000004",
+                amount: 10,
+            }
+            chai.request(server)
+            .post('/api/removeFromCartById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('false');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('The cart cannot have an item with less than 0 count. No changes have been made');
+                res.body.current_cart.should.be.a('object');
+                res.body.current_cart.items.should.be.a('array');
+                res.body.current_cart.price.should.be.a('number');
+            done();
+            });
+        }); 
+        it('ERROR: it should return an error (id required)', (done) => {
+            let query = {
+                amount: 2,
+            }
+            chai.request(server)
+            .post('/api/removeFromCartById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('false');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('An id is required');
+                res.body.current_cart.should.be.a('object');
+                res.body.current_cart.items.should.be.a('array');
+                res.body.current_cart.price.should.be.a('number');
+            done();
+            });
+        }); 
+        it('ERROR: it should return an error (invalid id)', (done) => {
+            let query = {
+                id: "123",
+                amount: 2,
+            }
+            chai.request(server)
+            .post('/api/removeFromCartById')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('false');
+                res.body.message.should.be.a('string');
+                res.body.message.should.eql('Not a valid id');
+                res.body.current_cart.should.be.a('object');
+                res.body.current_cart.items.should.be.a('array');
+                res.body.current_cart.price.should.be.a('number');
+            done();
+            });
+        }); 
+    });
+    describe('/POST /api/completeCartPurchase', () => {
+        it('it should POST to complete the cart purchase', (done) => {
+            let query = {
+            }
+            chai.request(server)
+            .post('/api/completeCartPurchase')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('true');
+                res.body.response.should.eql('Purchase completed');
+                res.body.current_cart.should.be.a('Object');
+                res.body.current_cart.items.should.be.a('array');
+                res.body.current_cart.price.should.eql(0);
+                res.body.purchase.items.should.be.a('array');
+                res.body.purchase.price.should.be.a('number');
+            done();
+            });
+        }); 
+    });
+    describe('/POST /api/emptyCart', () => {
+        it('it should POST to empty the cart', (done) => {
+            let query = {
+            }
+            chai.request(server)
+            .post('/api/emptyCart')
+            .send(query)
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.success.should.eql('true');
+                res.body.response.should.eql('Cart successfully emptied');
+                res.body.current_cart.should.be.a('Object');
+                res.body.current_cart.items.should.eql([]);
+                res.body.current_cart.price.should.eql(0);
+            done();
+            });
+        }); 
+    });
+    
+    
 });

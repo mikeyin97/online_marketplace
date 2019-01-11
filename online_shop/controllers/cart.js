@@ -2,6 +2,20 @@ var ObjectId = require('mongodb').ObjectID;
 var request = require('request');
 
 var cart = {items:[], price:0};
+if (process.env.NODE_ENV === 'test'){
+    cart = {
+        items: [
+            {
+                "id": "000000000000000000000002",
+                "title": "pen",
+                "price": 0.99,
+                "count": 1
+            }
+        ],
+        "price": 0.99
+    }
+};
+  
 
 class CartController {
 
@@ -14,6 +28,7 @@ class CartController {
       return res.status(400).send({
         success: 'false',
         message: 'An id is required',
+        current_cart: cart,
       });
     }
     try {
@@ -24,6 +39,7 @@ class CartController {
       return res.status(400).send({
         success: 'false',
         message: 'Not a valid id',
+        current_cart: cart,
       });
     }
 
@@ -99,6 +115,7 @@ class CartController {
       return res.status(400).send({
         success: 'false',
         message: 'An id is required',
+        current_cart: cart,
       });
     }
     try {
@@ -109,6 +126,7 @@ class CartController {
       return res.status(400).send({
         success: 'false',
         message: 'Not a valid id',
+        current_cart: cart,
       });
     }
 
@@ -118,9 +136,8 @@ class CartController {
     }
 
     var cartObj = cart.items.find(o => o.id === req.body.id);
-    cart.price -= (cartObj.price*amount);
     if (!cartObj){
-      return res.status(200).send({
+      return res.status(400).send({
         success: 'false',
         message: 'This item does not exist in your cart.',
         current_cart: cart,
@@ -128,13 +145,13 @@ class CartController {
     }
     if (cartObj.count - amount < 0){
       // if the amount to be removed from the cart exceeds the count of the item in the cart
-      cartObj.count = 0;
-      return res.status(200).send({
+      return res.status(400).send({
         success: 'false',
-        message: 'The cart cannot have an item with less than 0 count. The count has been set to 0',
+        message: 'The cart cannot have an item with less than 0 count. No changes have been made',
         current_cart: cart,
       });
     } else{
+      cart.price -= (cartObj.price*amount);
       cartObj.count = cartObj.count - amount;
       return res.status(200).send({
         success: 'true',
@@ -167,13 +184,12 @@ class CartController {
 
     // for each item in the cart, decrement the item in the shop by the corresponding count.
     // keep a running sum for the total cost of the cart
-    var cartTotal = 0;
     var oldcart = null;
 
     if (cart.items.length === 0){
       // if your cart is empty
       oldcart = cart;
-      cart = [];
+      cart = {items:[], price:0};
       return res.status(200).send({
         success: 'true',
         response: 'Purchase completed (you should buy something next time!)',
@@ -193,7 +209,7 @@ class CartController {
       });
       if (index+1 === array.length) {
         oldcart = cart;
-        cart = [];
+        cart = {items:[], price:0};
         return res.status(200).send({
           success: 'true',
           response: 'Purchase completed',
