@@ -3,7 +3,7 @@
 <img src="https://nisrockk.files.wordpress.com/2016/02/cropped-ms-banner1.jpg" />
 
 Hello! My name is Michael and this is my backend mockup of a online marketplace API. This app was built using
-the Express framework for node.js, leveraging mongoDB as my database, mocha and chai for my testing, and passport-local for authentication.
+the Express framework for node.js, leveraging mongoDB as my database, mocha and chai for my testing, and passport-local with bcrypt hashing for authentication.
 
 This app allows you to make requests to a shop database, that stores information about products, such as their title, price, and inventory. You can add new products, remove products, purchase products, etc. This app also allows you to add to a cart, which you can queue up products you want to buy. By completing your purchase, these items are removed from the shop, and your purchase price and items are displayed. 
 
@@ -14,7 +14,13 @@ This app allows you to make requests to a shop database, that stores information
 3. [ Authentication Notes ](#auth)
 4. [ Schemas and Structures ](#database)
 5. [ Endpoints ](#endpoints)
+    - [ Shop ](#shopapi)
+    - [ Cart ](#cartapi)
+    - [ Auth ](#authapi)
 6. [ Usage Guide ](#howtos)
+    - [ Sign Up ](#signup)
+    - [ Login ](#login)
+    - [ View User Info ](#userinfo)
     - [ Make a Purchase ](#makepurchase)
     - [ Query for All Products ](#queryall)
     - [ Query for Available Products ](#queryavailable)
@@ -25,7 +31,8 @@ This app allows you to make requests to a shop database, that stores information
     - [ Remove From Your Shopping Cart ](#removecart)
     - [ Delete Your Shopping Cart ](#deletecart)     
     - [ Complete Your Purchase ](#completecart)
-7. [ More Info ](#misc)
+    - [ Logout ](#logout)
+7. [ More Info and References](#misc)
 
 <a name="setup"></a>
 ## Setup
@@ -48,6 +55,27 @@ Tests are written using mocha and chai. In the testing environment, endpoints us
 
 <a name="auth"></a>
 ## Authentication Notes
+
+Authentication is implemented using passport-local. A user can signup with a new username and password or login with previous credentials used in the signup. The password is hashed using the `bcrypt` library, and the username and hashed password are stored in the `users` collection of the `local` database on mongo. Authorization errors occur if 
+
+1) You try to sign up with an existing username
+2) You login with incorrect or missing credentials
+
+Most endpoints in the api require authorization, however, some do not. The ones that do not require authorization are:
+
+- `/`
+- `/api/incrementItemById`
+- `/api/incrementItemByTitleAndPrice`
+- `/api/upsertItemByTitleAndPrice`
+- `/api/decrementItemById`
+- `/api/decrementItemByTitleAndPrice`
+- `/api/incrementItemById`
+- `/api/getItems`
+
+as well as both the login and signup page at, respectively, 
+
+- `/login`
+- `/signup`
 
 <a name="database"></a>
 ## Schemas
@@ -84,6 +112,9 @@ Where items is a list of items in the cart currently, and price is the running s
 
 <a name="endpoints"></a>
 ## Endpoints
+
+<a name="shopapi"></a>
+### SHOP
 
 #### POST /api/addItem
 - **Description**: Add an item to the database. If id is not specified, mongo will make a default ObjectID. Otherwise, id must be a string of 24 hex characters (so it can be converted to ObjectID). **WARNING** THIS IS A DEV TOOL ONLY FOR QUICKLY MAKING DATABASES TO TEST AS YOU CAN DUPLICATE UNIQUE KEYS. FOR REGULAR USAGE USE upsertItemByTitleAndPrice.
@@ -229,6 +260,9 @@ Where items is a list of items in the cart currently, and price is the running s
 - **Errors by Status**:
     - **400**: Missing parameters, invalid parameters
 
+<a name="cartapi"></a>
+### CART
+
 #### POST /api/emptyCart
 - **Description**: Completely clears the cart
 - **Body**:
@@ -289,8 +323,20 @@ Where items is a list of items in the cart currently, and price is the running s
         - **current_cart**: cart
 - **Errors by Status**:
 
+<a name="authapi"></a>
+### AUTH
+
 <a name="howtos"></a>
 ## Usage Guide
+
+<a name="signup"></a>
+- Sign Up
+
+<a name="login"></a>
+- Login
+
+<a name="userinfo"></a>
+- View User Info
 
 <a name="makepurchase"></a>
 - Make a Purchase
@@ -322,8 +368,11 @@ Where items is a list of items in the cart currently, and price is the running s
 <a name="completecart"></a>
 - Complete Your Purchase
 
+<a name="logout"></a>
+- Logout
+
 <a name="misc"></a>
-## To-do List
+## More Info and References
 1) finish writing docs for auth and how tos
 - image taken from [https://nisrockk.wordpress.com/2018/08/24/maplestory-m-a-mobile-leveling-guide/](https://nisrockk.wordpress.com/2018/08/24/maplestory-m-a-mobile-leveling-guide/)
 - testing references [https://scotch.io/tutorials/test-a-node-restful-api-with-mocha-and-chai](https://scotch.io/tutorials/test-a-node-restful-api-with-mocha-and-chai)

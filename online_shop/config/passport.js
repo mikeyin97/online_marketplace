@@ -3,10 +3,6 @@ var ObjectId = require('mongodb').ObjectID;
 var Strategy = require('passport-local').Strategy;
 var collectionName = 'users';
 var bcrypt = require('bcrypt');
-if (process.env.NODE_ENV === 'test'){
-  collectionName = 'usersTest';
-}
-
 
 var conn = MongoClient.connect('mongodb://localhost:27017/', { useNewUrlParser: true }).then(client =>
   client.db('local').collection(collectionName)
