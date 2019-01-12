@@ -14,7 +14,6 @@ module.exports = function(passport) {
     done(null, user._id);
   });
 
-  // used to deserialize the user
   passport.deserializeUser(function(id, done) {
     conn.then(client=> client.findOne(
       {_id: ObjectId(id)},
