@@ -37,6 +37,8 @@ This app allows you to make requests to a shop database, that stores information
 <a name="setup"></a>
 ## Setup
 
+NOTE: This repository is meant to be run on macOS. Some of the bash commands might not work on other operating systems (eg `export` vs `set` for environment variables.)
+
 1) Clone the repository with `git clone git@github.com:mikeyin97/online_marketplace.git`
 2) Install [mongoDB](https://docs.mongodb.com/manual/installation/)
 3) Spin up mongoDB with `sudo mongod`. 
