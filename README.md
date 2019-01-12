@@ -21,15 +21,15 @@ This app allows you to make requests to a shop database, that stores information
     - [ Sign Up ](#signup)
     - [ Login ](#login)
     - [ View User Info ](#userinfo)
-    - [ Make a Purchase ](#makepurchase)
+    - [ Make a Single Purchase ](#makepurchase)
     - [ Query for All Products ](#queryall)
-    - [ Query for Available Products ](#queryavailable)
+    - [ Query for Available Products Only](#queryavailable)
     - [ Query for Products with a Price in a Range ](#queryrange)
-    - [ Query for a Specific Object by ID ](#queryid)
+    - [ Query for a Single Item ](#queryid)
     - [ Add to Your Shopping Cart ](#addcart)
     - [ View Your Shopping Cart ](#viewcart)
     - [ Remove From Your Shopping Cart ](#removecart)
-    - [ Delete Your Shopping Cart ](#deletecart)     
+    - [ Empty Your Shopping Cart ](#deletecart)     
     - [ Complete Your Purchase ](#completecart)
     - [ Logout ](#logout)
 7. [ More Info and References](#misc)
@@ -465,17 +465,17 @@ If you do not know the item id, but you know the title and price (which as menti
 Note, if there's no more inventory of that product, or that product was never stocked, it will return error `Item was not found / had insufficient inventory`.
 
 <a name="queryall"></a>
-- Query for All Products
+#### Query for All Products
 
 To query for all products, make a GET request to `localhost:9999/api/getItems`. This will return a list of items and a count of the number of items in the list.
 
 <a name="queryavailable"></a>
-- Query for Available Products Only
+#### Query for Available Products Only
 
 To query for available products only, make a GET request to `localhost:9999/api/getItems` with query parameter `available=true`. (ie make GET request to `localhost:9999/api/getItems?available=true`). Only items with positive inventory will be returned. 
 
 <a name="queryrange"></a>
-- Query for Products with a Price in a Range
+#### Query for Products with a Price in a Range
 
 To query for products at or above a certain price, add the query parameter `lowerprice=#` and make the GET request to `localhost:9999/api/getItems?lowerprice=#`.
 
@@ -486,19 +486,19 @@ To query for products only between a lowerprice `a` and an upperprice `b`, add b
 For any of these, if you only want available products only, add the query parameter `available=true`.
 
 <a name="queryid"></a>
-- Query for a Single Item 
+#### Query for a Single Item 
 
 If you know the id of a single item, you can directly query for that single item by making a GET request to `localhost:9999/api/getItems?id=<your item id>`
 
 If you do not know the id of the item, but you do know its title and price, you can query for that item by making a GET request to `localhost:9999/api/getItems?title=<your item title>&price=<your item price>`
 
 <a name="viewcart"></a>
-- View Your Shopping Cart
+#### View Your Shopping Cart
 
 If you are logged in, you can view your current shopping cart. This is done by making a GET request to `localhost:9999/api/viewCart`. Your shopping cart defaults to empty when you first login. 
 
 <a name="addcart"></a>
-- Add to Your Shopping Cart
+#### Add to Your Shopping Cart
 
 If you are logged in, you can add to your shopping cart. Get the id of the item you want to add, then POST to `localhost:9999/api/addToCartById` with the id and the amount you want to buy in the body, eg:
 
@@ -514,7 +514,7 @@ This will be added to your cart, and the price of your cart will change to refle
 If the amount currently in your cart plus the amount you want to add to your cart would exceed the inventory of that item, it won't be added and you will get an error. It will also error if the id isn't valid or in the store, for example. 
 
 <a name="removecart"></a>
-- Remove From Your Shopping Cart
+#### Remove From Your Shopping Cart
 
 If you are logged in, you can remove items your shopping cart. Get the id of the item you want to remove, then POST to `localhost:9999/api/removeFromCartById` with the id and the amount you want to buy in the body, eg:
 
@@ -530,17 +530,17 @@ This amount of product will be removed from your cart, and the price of your car
 If you want to remove more than what's in your cart, this will throw an error and nothing will be remved. It will also error if the id isn't valid or it isn't in your cart. 
 
 <a name="deletecart"></a>
-- Empty Your Shopping Cart
+#### Empty Your Shopping Cart
 
 If you are logged in and want to empty your shopping cart, make a POST request to `localhost:9999/api/emptyCart`. No body is required. 
 
 <a name="completecart"></a>
-- Complete Your Purchase
+#### Complete Your Purchase
 
 If you are logged in and want to complete your purchase and have your cart changes reflected in the story inventory, make a POST request to `localhost:9999/api/completeCartPurchase`. No body is required. You will see your purchase "receipt", consisting of your items and price. Your cart will then revert to its original empty state. 
 
 <a name="logout"></a>
-- Logout
+#### Logout
 
 To logout and end your session, make a GET request to `localhost:9999/logout`.
 
