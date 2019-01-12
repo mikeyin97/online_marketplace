@@ -408,7 +408,7 @@ Where items is a list of items in the cart currently, and price is the running s
 ## Usage Guide
 
 <a name="signup"></a>
-- Sign Up
+#### Sign Up
 
 You can sign up by making a POST request to `localhost:9999/signup` with body containing your username and password, eg:
 
@@ -422,7 +422,7 @@ You can sign up by making a POST request to `localhost:9999/signup` with body co
 You must pick a username that is not registered in the database, or else you will get an unauthorized error. 
 
 <a name="login"></a>
-- Login
+#### Login
 
 You can login by making a POST request to `localhost:9999/login` with body containing your username and password, eg:
 
@@ -436,12 +436,12 @@ You can login by making a POST request to `localhost:9999/login` with body conta
 If the credentials are not found, an unauthorized error will be sent back. 
 
 <a name="userinfo"></a>
-- View User Info
+#### View User Info
 
 To view your user information while logged in, make a GET request to `localhost:9999/profile`. The message should contain your user `id` and `username`. 
 
 <a name="makepurchase"></a>
-- Make a Single Purchase
+#### Make a Single Purchase
 
 To make a single purchase, ie, to reduce the inventory of a product by 1, there are 2 ways to do it. 
 
