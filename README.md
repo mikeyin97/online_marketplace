@@ -37,7 +37,7 @@ This app allows you to make requests to a shop database, that stores information
 <a name="setup"></a>
 ## Setup
 
-1) Clone the repository.
+1) Clone the repository with `git clone git@github.com:mikeyin97/online_marketplace.git`
 2) Install [mongoDB](https://docs.mongodb.com/manual/installation/)
 3) Spin up mongoDB with `sudo mongod`. 
 4) Navigate into online_shop folder with `cd online_shop`.
@@ -455,7 +455,7 @@ Where items is a list of items in the cart currently, and price is the running s
 - testing references: [https://scotch.io/tutorials/test-a-node-restful-api-with-mocha-and-chai](https://scotch.io/tutorials/test-a-node-restful-api-with-mocha-and-chai)
 - auth references : [https://scotch.io/tutorials/easy-node-authentication-setup-and-local](https://scotch.io/tutorials/easy-node-authentication-setup-and-local)
 
-Thanks for reading: extensions for this project would be:
+Thanks for reading!! Some extensions for this project would be:
 1) use mongoose
 2) integrate graphql
 3) implement modern authentication
