@@ -5,7 +5,7 @@
 Hello! My name is Michael and this is my backend mockup of a online marketplace API. This app was built using
 the Express framework for node.js, leveraging mongoDB as my database, mocha and chai for my testing, and passport-local with bcrypt hashing for authentication.
 
-This app allows you to make requests to a shop database, that stores information about products, such as their title, price, and inventory. You can add new products, remove products, purchase products, etc. This app also allows you to add to a cart, which you can queue up products you want to buy. By completing your purchase, these items are removed from the shop, and your purchase price and items are displayed. 
+This app allows you to make requests to a shop database, that stores information about products, such as their title, price, and inventory. You can add new products, remove products, purchase products, etc. If you are logged in, this app also allows you to use a cart feature, which you can queue up products you want to buy. By completing your purchase, these items are removed from the shop, and your purchase price and items are displayed. 
 
 ## Table of Contents
 
@@ -118,6 +118,7 @@ Where items is a list of items in the cart currently, and price is the running s
 
 #### POST /api/addItem
 - **Description**: Add an item to the database. If id is not specified, mongo will make a default ObjectID. Otherwise, id must be a string of 24 hex characters (so it can be converted to ObjectID). **WARNING** THIS IS A DEV TOOL ONLY FOR QUICKLY MAKING DATABASES TO TEST AS YOU CAN DUPLICATE UNIQUE KEYS. FOR REGULAR USAGE USE upsertItemByTitleAndPrice.
+- **Authentication**: Required
 - **Body**:
     - **title**: Title of the product *(required)*
     - **price**: Price of the product *(required)*
@@ -131,9 +132,11 @@ Where items is a list of items in the cart currently, and price is the running s
         - **item**: new item
 - **Errors by Status**:
     - **400**: Missing parameters, ID not valid, trying to insert a duplicate ID
+    - **401**: Unauthenticated
 
 #### POST /api/incrementItemById
 - **Description**: Find an item by passed ID then update its inventory by an incremental value
+- **Authentication**: Optional
 - **Body**:
     - **id**: ID of the product *(required)*
     - **increment**: How much to increment the product's inventory *(default: 1)*
@@ -147,6 +150,7 @@ Where items is a list of items in the cart currently, and price is the running s
 
 #### POST /api/incrementItemByTitleAndPrice
 - **Description**: Find an item by passed title & price then update its inventory by an incremental value
+- **Authentication**: Optional
 - **Body**:
     - **title**: Title of the product *(required)*
     - **price**: Price of the product *(required)*
@@ -161,6 +165,7 @@ Where items is a list of items in the cart currently, and price is the running s
 
 #### POST /api/upsertItemByTitleAndPrice
 - **Description**: Takes in a product's title and price. If an item does not exist with that title and price, make an entry with an inventory equal to increment passed in. Otherwise, update the inventory of that item by that increment. Essentially it mimics adding increment # of the item to the shop, regardless of whether it exists or not. Increment MUST be positive.
+- **Authentication**: Optional
 - **Body**:
     - **title**: Title of the product *(required)*
     - **price**: Price of the product *(required)*
@@ -174,7 +179,8 @@ Where items is a list of items in the cart currently, and price is the running s
     - **400**: Missing parameters, parameters not found in db, parameters not valid, negative increment
 
 #### POST /api/decrementItemById
-- **Description**: Find an item by passed ID then decrement its inventory by a given value. Note that this is equivalent to incrementItemById with the opposite number. **NOTE**: You cannot decrement into negative numbers. If you want to decrement more than the inventory has, an error will occur, and the item will not be decremented.  
+- **Description**: Find an item by passed ID then decrement its inventory by a given value. Note that this is equivalent to incrementItemById with the opposite number. **NOTE**: You cannot decrement into negative numbers. If you want to decrement more than the inventory has, an error will occur, and the item will not be decremented. 
+- **Authentication**: Optional
 - **Body**:
     - **id**: ID of the product *(required)*
     - **decrement**: How much to decrement the product's inventory *(default: 1)*
@@ -187,7 +193,8 @@ Where items is a list of items in the cart currently, and price is the running s
     - **400**: Missing parameters, ID not found, ID not valid, insuccifient inventory
 
 #### POST /api/decrementItemByTitleAndPrice
-- **Description**: Find an item by passed title & price then decrement its inventory by a passed value. **NOTE**: You cannot decrement into negative numbers. If you want to decrement more than the inventory has, an error will occur, and the item will not be decremented.  
+- **Description**: Find an item by passed title & price then decrement its inventory by a passed value. **NOTE**: You cannot decrement into negative numbers. If you want to decrement more than the inventory has, an error will occur, and the item will not be decremented. 
+- **Authentication**: Optional
 - **Body**:
     - **title**: Title of the product *(required)*
     - **price**: Price of the product *(required)*
@@ -202,6 +209,7 @@ Where items is a list of items in the cart currently, and price is the running s
 
 #### POST /api/deleteItemById
 - **Description**: Find an item by passed ID then delete it from the database. 
+- **Authentication**: Required
 - **Body**:
     - **id**: ID of the product *(required)*
 - **Expected Response**:
@@ -211,9 +219,11 @@ Where items is a list of items in the cart currently, and price is the running s
         - **message**: Item deleted successfully
 - **Errors by Status**:
     - **400**: Missing parameters, ID not found, ID not valid
+    - **401**: Unauthenticated
 
 #### POST /api/deleteItemByTitleAndPrice
 - **Description**: Find an item by passed title & price then delete it from the database. 
+- **Authentication**: Required
 - **Body**:
     - **title**: Title of the product *(required)*
     - **price**: Price of the product *(required)*
@@ -224,9 +234,11 @@ Where items is a list of items in the cart currently, and price is the running s
         - **message**: Item deleted successfully
 - **Errors by Status**:
     - **400**: Missing parameters, ID not found, ID not valid
+    - **401**: Unauthenticated
 
 #### POST /api/amountGtInventory
 - **Description**: Checks if a given amount passed in strictly exceeds the given inventory of an item (found by passed ID)
+- **Authentication**: Optional
 - **Body**:
     - **id**: ID of the product *(required)*
     - **amount**: Amount to compare to *(required)*
@@ -240,6 +252,7 @@ Where items is a list of items in the cart currently, and price is the running s
 
 #### GET /api/getItems
 - **Description**: Get all items according to the passed query parameters.
+- **Authentication**: Optional
 - **Query Parameters**:
     - **id**: ID of the product
     - **title**: Amount to compare to
@@ -265,6 +278,7 @@ Where items is a list of items in the cart currently, and price is the running s
 
 #### POST /api/emptyCart
 - **Description**: Completely clears the cart
+- **Authentication**: Required
 - **Body**:
 - **Expected Response**:
     - **status**: 200
@@ -276,6 +290,7 @@ Where items is a list of items in the cart currently, and price is the running s
 
 #### POST /api/addToCartById
 - **Description**: Adds a provided amount of a product specified by given product id to the cart. 
+- **Authentication**: Required
 - **Body**:
     - **id**: ID of the product *(required)*
     - **amount**: Amount to be added to the cart *(default:1)*
@@ -287,9 +302,11 @@ Where items is a list of items in the cart currently, and price is the running s
         - **current_cart**: cart
 - **Errors by Status**:
     - **400**: Missing parameters, ID not found, ID not valid, amount not valid, total amount + cart amount exceeds inventory
+    - **401**: Unauthenticated
 
 #### POST /api/removeFromCartById
 - **Description**: Removes a provided amount of a product specified by given product id to the cart. 
+- **Authentication**: Required
 - **Body**:
     - **id**: ID of the product *(required)*
     - **amount**: Amount to be added to the cart *(default:1)*
@@ -301,9 +318,11 @@ Where items is a list of items in the cart currently, and price is the running s
         - **current_cart**: cart
 - **Errors by Status**:
     - **400**: Missing parameters, ID not found, ID not valid, amount not valid, removing more than what is in the cart, removing an object not in the cart
+    - **401**: Unauthenticated
 
 #### POST /api/completeCartPurchase
 - **Description**: Completes the purchase by finalizing the cart and making reflected changes in the shop. 
+- **Authentication**: Required
 - **Body**:
 - **Expected Response**:
     - **status**: 200
@@ -313,18 +332,77 @@ Where items is a list of items in the cart currently, and price is the running s
         - **purchase**: cart
         - **current_cart**: (empty) cart
 - **Errors by Status**:
+    - **401**: Unauthenticated
 
 #### GET /api/ViewCart
 - **Description**: Views your current cart.
+- **Authentication**: Required
 - **Expected Response**:
     - **status**: 200
     - **reponse body**:
         - **success**: true
         - **current_cart**: cart
 - **Errors by Status**:
+    - **401**: Unauthenticated
 
 <a name="authapi"></a>
 ### AUTH
+
+#### POST /login
+- **Description**: Login with stored credentials to access endpoints requiring authentication.
+- **Authentication**: optional
+- **Body**:
+    - **username**: Your username *(required)*
+    - **password**: Your password *(required)*
+- **Expected Response**:
+    - **status**: 200
+    - **reponse body**:
+        - **success**: true
+        - **message**: logged in
+- **Errors by Status**:
+    - **400**: missing or invalid credentials
+
+#### POST /signup
+- **Description**: Signup with new credentials (new username) to access endpoints requiring authentication.
+- **Authentication**: optional
+- **Body**:
+    - **username**: Your username *(required)*
+    - **password**: Your password *(required)*
+- **Expected Response**:
+    - **status**: 200
+    - **reponse body**:
+        - **success**: true
+        - **message**: signed up
+- **Errors by Status**:
+    - **400**: missing or invalid credentials, username in use
+
+#### GET /profile
+- **Description**: Get your user profile
+- **Authentication**: Required
+- **Expected Response**:
+    - **status**: 200
+    - **reponse body**:
+        - **success**: true
+        - **message**: object that looks like
+        ```
+            {
+                id: id string,
+                username: username string
+            }
+        ```
+- **Errors by Status**:
+    - **401**: Unauthenticated
+
+#### GET /logout
+- **Description**: Logout of the current session
+- **Authentication**: Required
+- **Expected Response**:
+    - **status**: 200
+    - **reponse body**:
+        - **success**: true
+        - **message**: logged out
+- **Errors by Status**:
+    - **401**: Unauthenticated
 
 <a name="howtos"></a>
 ## Usage Guide
@@ -373,9 +451,12 @@ Where items is a list of items in the cart currently, and price is the running s
 
 <a name="misc"></a>
 ## More Info and References
-1) finish writing docs for auth and how tos
-- image taken from [https://nisrockk.wordpress.com/2018/08/24/maplestory-m-a-mobile-leveling-guide/](https://nisrockk.wordpress.com/2018/08/24/maplestory-m-a-mobile-leveling-guide/)
-- testing references [https://scotch.io/tutorials/test-a-node-restful-api-with-mocha-and-chai](https://scotch.io/tutorials/test-a-node-restful-api-with-mocha-and-chai)
-- auth references [https://scotch.io/tutorials/easy-node-authentication-setup-and-local](https://scotch.io/tutorials/easy-node-authentication-setup-and-local)
-- extensions: use mongoose, use graphql
+- image taken from: [https://nisrockk.wordpress.com/2018/08/24/maplestory-m-a-mobile-leveling-guide/](https://nisrockk.wordpress.com/2018/08/24/maplestory-m-a-mobile-leveling-guide/)
+- testing references: [https://scotch.io/tutorials/test-a-node-restful-api-with-mocha-and-chai](https://scotch.io/tutorials/test-a-node-restful-api-with-mocha-and-chai)
+- auth references : [https://scotch.io/tutorials/easy-node-authentication-setup-and-local](https://scotch.io/tutorials/easy-node-authentication-setup-and-local)
+
+Thanks for reading: extensions for this project would be:
+1) use mongoose
+2) integrate graphql
+3) implement modern authentication
 
